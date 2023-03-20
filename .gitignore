@@ -1,6 +1,10 @@
 # Visual Studio 2015 user specific files
 .vs/
 
+# jet brains specific files
+.idea/
+cmake-build-debug/
+
 # Compiled Object files
 *.slo
 *.lo

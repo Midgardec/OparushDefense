@@ -27,7 +27,7 @@ public:
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 	float GetCost() const;
 	float GetDamage() const;
-	float GetLevel() const;
+	float GetTowerLevel() const;
 	
 	float GetHealth() const;
 	void SetHealth(float Input);

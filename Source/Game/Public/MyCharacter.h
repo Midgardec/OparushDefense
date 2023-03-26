@@ -59,6 +59,8 @@ public:
 	UBoxComponent* Collision;
 
 private:
+
+	//------------------------------------------------------ old character's setup
 	UPROPERTY(BlueprintReadWrite, VisibleAnywhere, meta = (AllowPrivateAccess = "true"))
 	USceneComponent* SceneComponent;
 	
@@ -67,6 +69,19 @@ private:
 	
 	UPROPERTY(BlueprintReadWrite, VisibleAnywhere, meta = (AllowPrivateAccess = "true"))
 	UCameraComponent* CameraComponent;
+
+
+	//------------------------------------------------------ new character's setup
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, meta=(AllowPrivateAccess = "true"))
+	TObjectPtr<UCapsuleComponent> MyCapsuleComponent;
+	
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, meta=(AllowPrivateAccess = "true"))
+	TObjectPtr<USkeletalMeshComponent> MyMesh;
+
+	/*
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, meta=(AllowPrivateAccess = "true"))
+	TObjectPtr<UCharacterMovementComponent> MyCharacterMovement;*/
+
 
 	
 	UPROPERTY()
@@ -78,14 +93,11 @@ private:
 	UPROPERTY()
 	FRotator TargetRotation;
 
+
+	// tower's vars
 	UPROPERTY()
 	bool Overlapped;
-
-
-	/**
-	 * @brief
-	 * Tower's  part
-	 */
+	
 	UPROPERTY()
 	ATower* OverlappedTower;
 	
@@ -112,7 +124,7 @@ private:
 	
 protected:
 	/// ------------------------
-	/// var's for setting camera
+	/// vars for setting camera
 	/// ------------------------
 	///
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Player's Vars|Coins")

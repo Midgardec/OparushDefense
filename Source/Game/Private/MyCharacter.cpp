@@ -7,6 +7,7 @@
 #include "GameFramework/SpringArmComponent.h"
 #include "Kismet/KismetMathLibrary.h"
 #include "Components/BoxComponent.h"
+#include "Components/CapsuleComponent.h"
 
 #include "Engine/Engine.h"
 #include "GameFramework/CharacterMovementComponent.h"
@@ -22,12 +23,12 @@ AMyCharacter::AMyCharacter()
  	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 	AutoPossessPlayer = EAutoReceiveInput::Player0;
-	SceneComponent = CreateDefaultSubobject<USceneComponent>(TEXT("SceneComponent"));
-	
-	RootComponent = SceneComponent;//this->GetCapsuleComponent();
-
-
-	
+///
+/// ----------------
+/// Set up Character's components
+/// ----------------
+///
+	this->GetMesh()->SetupAttachment(RootComponent);
 ///
 ///	SpringArm setup
 /// 
@@ -40,13 +41,11 @@ AMyCharacter::AMyCharacter()
 	CameraComponent->SetupAttachment(SpringArmComponent, USpringArmComponent::SocketName);
 	CameraComponent->bUsePawnControlRotation = false;
 	CameraComponent->FieldOfView = FOV;
-
-	
 ///
 ///	Collision setup
 /// 
 	Collision = CreateDefaultSubobject<UBoxComponent>(TEXT("BoxCollisionComponent"));
-	Collision->SetupAttachment(GetMesh());
+	Collision->SetupAttachment(RootComponent);
 	Collision->SetBoxExtent(FVector(32.f,32.f,32.f));
 	Collision->SetWorldScale3D(FVector(2.f,2.f,2.f));
 	Collision->SetRelativeLocation(FVector(0.f,0.f,50.f));
@@ -63,7 +62,7 @@ void AMyCharacter::BeginPlay()
 {
 	
 	Super::BeginPlay();
-	TargetLocation = GetActorLocation();
+	
 	TargetZoom = 2000.0f;
 	
 	
@@ -97,8 +96,8 @@ void AMyCharacter::BeginPlay()
 	 
 	Jumping = false;
 
-
-	SceneComponent->SetWorldLocation(FVector(Map->StartCell.Y_coord*TILE_SIDE_LEN,Map->StartCell.X_coord*TILE_SIDE_LEN,0));
+	
+	this->SetActorLocation(FVector(Map->StartCell.Y_coord*TILE_SIDE_LEN,Map->StartCell.X_coord*TILE_SIDE_LEN,0));
 	
 }
 // Called to bind functionality to input
@@ -123,10 +122,6 @@ void AMyCharacter::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
-
-	//const FVector InterpolatedLocation = UKismetMathLibrary::VInterpTo(GetActorLocation(), TargetLocation, 0.1, MoveSpeed);
-	//this->SetActorLocation(InterpolatedLocation);
-	
 	const float InterpolatedZoom = UKismetMathLibrary::FInterpTo(SpringArmComponent->TargetArmLength, TargetZoom, DeltaTime, ZoomSpeed);
 	this->SpringArmComponent->TargetArmLength = InterpolatedZoom;
 
@@ -134,7 +129,6 @@ void AMyCharacter::Tick(float DeltaTime)
 	SpringArmComponent->SetRelativeRotation(InterpolatedRotation);
 
 	this->SpawnTower(DeltaTime);
-
 
 	if(Jumping)
 	{
@@ -205,6 +199,7 @@ void AMyCharacter::Zoom(float AxisValue)
 	{
 		return;
 	}
+	//
 
 	const float Zoom = AxisValue * 500.f;
 	TargetZoom = FMath :: Clamp(Zoom + TargetZoom, ARM_LENGTH_MIN, ARM_LENGTH_MAX);
@@ -220,17 +215,18 @@ void AMyCharacter::PlaceTower()
         {
 			const int X = FMath::Clamp(TowerMemberLocation.X/TILE_SIDE_LEN, 0, Map->mapHeight -1) ;
 			const int Y = FMath::Clamp(TowerMemberLocation.Y/TILE_SIDE_LEN, 0, Map->mapHeight -1) ;
-			TowerMemberLocation.X = round((TowerMemberLocationShift.X + this->Collision->GetComponentTransform().GetLocation().X) / TILE_SIDE_LEN) * TILE_SIDE_LEN;
-			TowerMemberLocation.Y = round((TowerMemberLocationShift.Y + this->Collision->GetComponentTransform().GetLocation().Y) / TILE_SIDE_LEN) * TILE_SIDE_LEN;
+			TowerMemberLocation.X = round((TowerMemberLocationShift.X + this->GetActorLocation().X) / TILE_SIDE_LEN) * TILE_SIDE_LEN;
+			TowerMemberLocation.Y = round((TowerMemberLocationShift.Y + this->GetActorLocation().Y) / TILE_SIDE_LEN) * TILE_SIDE_LEN;
             TowerMemberLocation.X = FMath::Clamp(TowerMemberLocation.X, 0, TILE_SIDE_LEN * (Map->mapWidth-1));
             TowerMemberLocation.Y = FMath::Clamp(TowerMemberLocation.Y, 0, TILE_SIDE_LEN * (Map->mapHeight-1));
-
+ 
 			//GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Green, FString::Printf(TEXT("%i"),
 			//	Map->Map_Cells[X][Y]));
 
 			if(Map->Map_Cells[X][Y]==0)
             {
             	TowerMember->SetActorLocation(TowerMemberLocation);
+				TowerMember->bIsSpawner=false;
             	TowerMember = nullptr;
 				Map->MapChange(X,Y, this->PLACED);
 				GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Green, FString::Printf(TEXT("X = %i, Y = %i"),
@@ -252,8 +248,8 @@ void AMyCharacter::SpawnTower(float DeltaTime)
 {
 	if(TowerMember != nullptr)
 	{
-		TowerMemberLocation.X = round((TowerMemberLocationShift.X + this->Collision->GetComponentTransform().GetLocation().X) / TILE_SIDE_LEN) * TILE_SIDE_LEN;
-		TowerMemberLocation.Y = round((TowerMemberLocationShift.Y + this->Collision->GetComponentTransform().GetLocation().Y) / TILE_SIDE_LEN) * TILE_SIDE_LEN;
+		TowerMemberLocation.X = round((TowerMemberLocationShift.X + this->GetActorLocation().X) / TILE_SIDE_LEN) * TILE_SIDE_LEN;
+		TowerMemberLocation.Y = round((TowerMemberLocationShift.Y + this->GetActorLocation().Y) / TILE_SIDE_LEN) * TILE_SIDE_LEN;
 		TowerMemberLocation.X = FMath::Clamp(TowerMemberLocation.X, 0, TILE_SIDE_LEN * (Map->mapWidth -1));
 		TowerMemberLocation.Y = FMath::Clamp(TowerMemberLocation.Y, 0, TILE_SIDE_LEN * (Map->mapHeight-1));
 
@@ -317,7 +313,7 @@ void AMyCharacter::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor* O
 	if(OtherActor!=this)
 	{
 		Overlapped = true;
-		//GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Red, TEXT("Overlaped!"));
+		//GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Red, TEXT("Overlapped!"));
 		
         OverlappedTower = CopyTemp(Cast<ATower>(OtherActor));
 	}

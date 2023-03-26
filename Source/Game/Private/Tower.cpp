@@ -27,7 +27,7 @@ void ATower::Tick(float DeltaTime)
 	
 	if(!bIsSpawner)
 	{
-		Blast();
+		this->Blast();
 	}
 	
 }
@@ -49,7 +49,7 @@ float ATower::GetDamage() const
 	return DamageAmount;
 }
 
-float ATower::GetLevel() const
+float ATower::GetTowerLevel() const
 {
 	return TowerLevel;
 }
@@ -76,7 +76,8 @@ void ATower::Heal(const float Input)
 }
 
 void ATower::Blast()
-{	
+{
+	GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::White,FString::Printf(TEXT("text")));
 	//____________
 	//spawn bullets
 	//____________

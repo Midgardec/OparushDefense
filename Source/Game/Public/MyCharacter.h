@@ -71,6 +71,7 @@ public:
 	UPROPERTY(BlueprintReadWrite,EditAnywhere, meta = (AllowPrivateAccess = "true"))
 	UBoxComponent* Collision;
 	FVector Direction;
+	bool bReadyForWave = false;
 
 private:
 

@@ -183,3 +183,30 @@ AMyCharacter* AEnemyBase::GetPlayer() const
 	return nullptr;
 }
 
+
+auto AEnemyBase::Place() -> AEnemyBase*
+{
+		
+	if(GetWorld())
+	{
+		FActorSpawnParameters SpawnParameters = FActorSpawnParameters();
+		SpawnParameters.Template = this;
+		//GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::White,FString::Printf(TEXT("text")));
+		return GetWorld()->SpawnActor<AEnemyBase>(this->GetClass(), SpawnParameters);
+			
+			
+		/*	
+		
+		f->SetActorLocation(Location);
+		f->SetActorRotation(Rotation) ;
+		GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Red,
+								 FString::Printf(TEXT("%f -x, %f -y"),f->GetActorLocation().X, f->GetActorLocation().Y));
+		GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Blue,
+										 FString::Printf(TEXT("%f -x, %f -y"),Location.X,Location.Y));
+
+		GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, TEXT("Placed"));*/
+	}
+
+	return nullptr;
+	
+}

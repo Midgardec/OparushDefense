@@ -46,6 +46,7 @@ public:
 	
 	void MoveToWaypoint();
 	AMyCharacter* GetPlayer() const;
+	auto Place() -> AEnemyBase*;
 
 
 	UPROPERTY()

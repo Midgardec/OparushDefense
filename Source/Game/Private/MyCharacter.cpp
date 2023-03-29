@@ -28,7 +28,8 @@ AMyCharacter::AMyCharacter()
 /// ----------------
 /// Set up Character's components
 /// ----------------
-///
+///=================================================================@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+    bReadyForWave = true;
 	this->GetMesh()->SetupAttachment(RootComponent);
 ///
 ///	SpringArm setup
@@ -180,8 +181,10 @@ void AMyCharacter::Tick(float DeltaTime)
 	
 	if(Jumping)
 	{
+		
 		//GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Green, TEXT("JUMP((("));
         this->Jump();
+		
 		//this->StopJumping();
 	}
 }
@@ -410,6 +413,7 @@ void AMyCharacter::OnOverlapEnd(UPrimitiveComponent* OverlappedComp, AActor* Oth
 
 void AMyCharacter::CheckJump()
 {
+	
 	if(Jumping)
 	{
 		//GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Green, TEXT("already jumping"));

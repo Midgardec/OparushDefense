@@ -6,11 +6,23 @@
 #include "Tower.h"
 #include "MyMap.h"
 #include "ActorFactories/ActorFactoryTriggerBox.h"
+#include "PaperSpriteComponent.h"
 #include "Components/BoxComponent.h"
 #include "Camera/CameraComponent.h"
 #include "GameFramework/SpringArmComponent.h"
 #include "GameFramework/Character.h"
 #include "MyCharacter.generated.h"
+
+
+UENUM(BlueprintType, meta = (UseEnumValuesAsMaskValuesInEditor="true"))
+enum class EDirection : uint8
+{
+	Up UMETA(DisplayName = "Up"),
+	Down UMETA(DisplayName = "Down"),
+	Left UMETA(DisplayName = "Left"),
+	Right UMETA(DisplayName = "Right")
+};
+
 
 class UCameraComponent;
 class USpringArmComponent;
@@ -33,6 +45,7 @@ public:
 
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
+	void ChangeSprite(EDirection NewDirection);
 
 protected:
 	UFUNCTION()
@@ -57,6 +70,7 @@ protected:
 public:
 	UPROPERTY(BlueprintReadWrite,EditAnywhere, meta = (AllowPrivateAccess = "true"))
 	UBoxComponent* Collision;
+	FVector Direction;
 
 private:
 
@@ -78,9 +92,22 @@ private:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, meta=(AllowPrivateAccess = "true"))
 	TObjectPtr<USkeletalMeshComponent> MyMesh;
 
-	/*
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, meta=(AllowPrivateAccess = "true"))
-	TObjectPtr<UCharacterMovementComponent> MyCharacterMovement;*/
+	// ---- sprite setup vars
+		// Переменная для хранения текущего направления спрайта
+	EDirection CurrentDirection = EDirection::Right;
+	
+		// Задаем список спрайтов для каждого направления
+	UPROPERTY(EditAnywhere, Category = "Sprite")
+	TMap<EDirection, UPaperSprite*> Sprites;
+	
+		// Компонент спрайта
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Sprite", meta = (AllowPrivateAccess = "true"))
+	UPaperSpriteComponent* SpriteComponent;
+
+		// Используемый спрайт
+	UPROPERTY(BlueprintReadWrite, Category = "Sprite", meta = (AllowPrivateAccess = "true"))
+	UPaperSprite* CurrentSprite;
+	
 
 
 	

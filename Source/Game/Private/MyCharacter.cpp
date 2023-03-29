@@ -7,6 +7,7 @@
 #include "GameFramework/SpringArmComponent.h"
 #include "Kismet/KismetMathLibrary.h"
 #include "Components/BoxComponent.h"
+#include "PaperSprite.h"
 #include "Components/CapsuleComponent.h"
 
 #include "Engine/Engine.h"
@@ -55,6 +56,26 @@ AMyCharacter::AMyCharacter()
 		
 	this->GetCharacterMovement()->MaxWalkSpeed = MoveSpeed;
 	
+///
+/// Sprite setup
+///
+
+	UPaperSprite* UpSprite = LoadObject<UPaperSprite>(nullptr, TEXT("/Script/Paper2D.PaperSprite'/Game/_Main/Sprites/Enemies/sprite_sheet_Sprite_77.sprite_sheet_Sprite_77'"));
+	UPaperSprite* DownSprite = LoadObject<UPaperSprite>(nullptr,TEXT("/Script/Paper2D.PaperSprite'/Game/_Main/Sprites/Enemies/sprite_sheet_Sprite_78.sprite_sheet_Sprite_78'"));
+	UPaperSprite* LeftSprite = LoadObject<UPaperSprite>(nullptr,TEXT("/Script/Paper2D.PaperSprite'/Game/_Main/Sprites/Enemies/sprite_sheet_Sprite_76.sprite_sheet_Sprite_76'"));
+	UPaperSprite* RightSprite = LoadObject<UPaperSprite>(nullptr,TEXT("/Script/Paper2D.PaperSprite'/Game/_Main/Sprites/Enemies/sprite_sheet_Sprite_75.sprite_sheet_Sprite_75'"));
+	
+	
+	Sprites.Add(EDirection::Up, UpSprite);
+	Sprites.Add(EDirection::Down, DownSprite);
+	Sprites.Add(EDirection::Left, LeftSprite);
+	Sprites.Add(EDirection::Right, RightSprite);
+
+	SpriteComponent = CreateDefaultSubobject<UPaperSpriteComponent>(TEXT("SpriteComponent"));
+	SpriteComponent->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+	SpriteComponent->SetupAttachment(RootComponent);
+	SpriteComponent->SetGenerateOverlapEvents(false);
+	
 }
 
 // Called when the game starts or when spawned
@@ -96,6 +117,13 @@ void AMyCharacter::BeginPlay()
 	 
 	Jumping = false;
 
+	// Устанавливаем начальный спрайт
+	CurrentSprite = Sprites[EDirection::Right];
+	SpriteComponent->SetRelativeRotation(FRotator(90.0f, 90.f, 0.0f));
+	SpriteComponent->SetSprite(CurrentSprite);
+	SpriteComponent->SetWorldScale3D(FVector(10.0f, 10.0f, 10.0f));
+
+
 	
 	this->SetActorLocation(FVector(Map->StartCell.Y_coord*TILE_SIDE_LEN,Map->StartCell.X_coord*TILE_SIDE_LEN,0));
 	
@@ -116,7 +144,6 @@ void AMyCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompone
 	PlayerInputComponent->BindAction(TEXT("Action|Place"), IE_Pressed, this, &AMyCharacter::PlaceTower);
 	
 }
-
 // Called every frame
 void AMyCharacter::Tick(float DeltaTime)
 {
@@ -130,11 +157,52 @@ void AMyCharacter::Tick(float DeltaTime)
 
 	this->SpawnTower(DeltaTime);
 
+	
+	// Определяем новое направление спрайта в зависимости от направления движения
+	
+	
+	EDirection NewDirection;
+	if (FMath::Abs(Direction.X) > FMath::Abs(Direction.Y))
+	{
+		NewDirection = (Direction.X > 0.f) ? EDirection::Right : EDirection::Left;
+	}
+	else
+	{
+		NewDirection = (Direction.Y > 0.f) ? EDirection::Down : EDirection::Up;
+	}
+
+	// Если направление изменилось, то меняем спрайт
+	if (NewDirection != CurrentDirection)
+	{
+		ChangeSprite(NewDirection);
+	}
+
+	
 	if(Jumping)
 	{
 		//GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Green, TEXT("JUMP((("));
         this->Jump();
 		//this->StopJumping();
+	}
+}
+void AMyCharacter::ChangeSprite(EDirection NewDirection)
+{
+	// Задаем новое направление
+	CurrentDirection = NewDirection;
+
+	// Получаем спрайт для нового направления из списка
+	UPaperSprite* NewSprite = Sprites.FindRef(NewDirection);
+
+	// Если спрайт найден, то меняем его
+	if (NewSprite != nullptr)
+	{
+		// Заменяем текущий спрайт на новый
+		SpriteComponent->SetSprite(NewSprite);
+	}
+	// Иначе выводим ошибку в лог
+	else
+	{
+		UE_LOG(LogTemp, Error, TEXT("Sprite not found for direction %d"), (int32)NewDirection);
 	}
 }
 
@@ -150,19 +218,23 @@ void AMyCharacter::MoveVert(float AxisValue)
 	this->AddMovementInput(GetActorForwardVector(), AxisValue);
  
 	//TargetLocation = GetActorForwardVector() * GetWorld()->GetDeltaSeconds() * AxisValue * MoveSpeed + TargetLocation;
-
+	Direction.X = AxisValue;
+	Direction.Y = 0;
 	if(AxisValue > 0){
 		if(!bMoveHoriz)
 		{
 			TowerMemberLocationShift.Y = 0;
 		}
+		
 		TowerMemberLocationShift.X = TM_LOCATION_SHIFT;
 	}
 	else{
+		
 		if(!bMoveHoriz)
 		{
 			TowerMemberLocationShift.Y = 0;
 		}
+		
 		TowerMemberLocationShift.X = -TM_LOCATION_SHIFT;
 	}
 }
@@ -175,6 +247,8 @@ void AMyCharacter::MoveHoriz(float AxisValue)
 		return;
 	}
 	bMoveHoriz = true;
+	Direction.Y = AxisValue;
+	Direction.X = 0;
 	AddMovementInput(GetActorRightVector() ,AxisValue);
 	//TargetLocation = GetActorRightVector() * GetWorld()->GetDeltaSeconds() * AxisValue * MoveSpeed + TargetLocation;
 	if(AxisValue > 0){
@@ -182,9 +256,11 @@ void AMyCharacter::MoveHoriz(float AxisValue)
 		{
 			TowerMemberLocationShift.X =  0;
 		}
+		
 		TowerMemberLocationShift.Y = TM_LOCATION_SHIFT;
 	}
 	else{
+		
 		if(!bMoveVert)
 		{
 			TowerMemberLocationShift.X = 0;

@@ -10,6 +10,7 @@
 #include "EnemyBase.generated.h"
 
 
+/*
 UENUM(BlueprintType, meta = (UseEnumValuesAsMaskValuesInEditor="true"))
 enum class EDirection : uint8
 	{
@@ -18,6 +19,7 @@ enum class EDirection : uint8
 		Left UMETA(DisplayName = "Left"),
 		Right UMETA(DisplayName = "Right")
 	};
+	*/
 
 
 UCLASS()

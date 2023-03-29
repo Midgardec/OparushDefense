@@ -47,6 +47,8 @@ void AEnemyBase::BeginPlay()
 	Super::BeginPlay();
 
 	EnemyAIController = Cast<AEnemyAIController>(GetController());
+
+	
 	const FVector MapLocation(0.0f, 0.0f, 0.0f);
     const FRotator MapRotation(0.0f, 0.0f, 0.0f);
     const FActorSpawnParameters SpawnInfo;

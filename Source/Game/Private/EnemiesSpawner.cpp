@@ -21,30 +21,34 @@ void AEnemiesSpawner::BeginPlay()
 {
 	Super::BeginPlay();
 	Player = GetPlayer();
+	StartWave();
 }
-
-void AEnemiesSpawner::SpawnEnemy()
-{
-	
-	FActorSpawnParameters SpawnParameters = FActorSpawnParameters();
-
-	GetWorld()->SpawnActor<AEnemyBase>(AEnemyBase::StaticClass(), SpawnParameters);
-}
-
 void AEnemiesSpawner::StartWave()
 {
 	
-	//SpawnParameters.Template = this;
-	int waveIterator = 1;
-	WaveIndex++;
+	WaveIndex=1;
 	SpawnDelay = 2.f;
-	while(waveIterator < WaveIndex)
+	
+	GetWorldTimerManager().SetTimer(TimerHandler, this, &AEnemiesSpawner::SpawnEnemies, SpawnDelay, true);
+}
+
+void AEnemiesSpawner::SpawnEnemies()
+{
+	if (EnemyPerWaveCounter < WaveIndex)
 	{
-		GEngine->AddOnScreenDebugMessage(-1,15.f, FColor::Cyan, FString::Printf(TEXT("Wave %i"), WaveIndex));
-		waveIterator++;
-		SpawnEnemy();
-		GetWorldTimerManager().SetTimer(TimerHandler, this, &AEnemiesSpawner::SpawnEnemy, SpawnDelay, false);
+		SpawnEnemy(AEnemyBase::StaticClass());
+		EnemyPerWaveCounter++;
 	}
+	else
+	{
+		GetWorldTimerManager().ClearTimer(TimerHandler);
+	}
+}
+
+void AEnemiesSpawner::SpawnEnemy(UClass* EnemyClassToSpawn)
+{
+	FActorSpawnParameters SpawnParameters = FActorSpawnParameters();
+	GetWorld()->SpawnActor<AEnemyBase>(EnemyClassToSpawn, SpawnParameters);
 	
 }
 

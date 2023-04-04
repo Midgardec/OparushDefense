@@ -83,7 +83,10 @@ public:
 	// Используемый спрайт
 	UPROPERTY(BlueprintReadWrite, Category = "Sprite", meta = (AllowPrivateAccess = "true"))
 	UPaperSprite* CurrentSprite;
-	
+
+	// SphereColision
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, meta = (AllowPrivateAccess = "true"))
+	USphereComponent* SphereCollision;
 private:
 
 	FVector TargetLocation;

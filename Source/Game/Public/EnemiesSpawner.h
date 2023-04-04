@@ -21,15 +21,18 @@ protected:
 	virtual void BeginPlay() override;
 
 public:
-	void SpawnEnemy();
+	void SpawnEnemy(UClass* EnemyClassToSpawn);
 	void StartWave();
+	void SpawnEnemies();
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 	AMyCharacter* GetPlayer() const;
 
 	FTimerHandle TimerHandler;
-	int WaveIndex = 0;
+	int WaveIndex = 1;
 	UPROPERTY()
 	AMyCharacter* Player;
 	float SpawnDelay;
+
+	int EnemyPerWaveCounter = 0;
 };

@@ -37,7 +37,10 @@ AEnemyBase::AEnemyBase()
 	SpriteComponent->SetupAttachment(RootComponent);
 	SpriteComponent->SetGenerateOverlapEvents(false);
 
-	
+	SphereCollision = CreateDefaultSubobject<USphereComponent>(TEXT("SphereCollision"));
+	SphereCollision->SetSphereRadius(100.f); // задаем радиус сферы
+	SphereCollision->SetCollisionProfileName(TEXT("EnemyCollision")); // задаем профиль коллизии для сферы
+	SphereCollision->SetupAttachment(RootComponent);
 
 }
 
@@ -63,7 +66,8 @@ void AEnemyBase::BeginPlay()
 	SpriteComponent->SetRelativeRotation(FRotator(90.0f, 90.f, 0.0f));
 	SpriteComponent->SetSprite(CurrentSprite);
 	SpriteComponent->SetWorldScale3D(FVector(10.0f, 10.0f, 10.0f));
-
+	
+	
 	
 	CurrentCheckPoint = 0;
 	canMove = true;

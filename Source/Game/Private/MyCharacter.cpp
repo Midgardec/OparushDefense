@@ -306,6 +306,7 @@ void AMyCharacter::PlaceTower()
             {
             	TowerMember->SetActorLocation(TowerMemberLocation);
 				TowerMember->bIsSpawner=false;
+				TowerMember->Placed = true;
             	TowerMember = nullptr;
 				Map->MapChange(X,Y, this->PLACED);
 				GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Green, FString::Printf(TEXT("X = %i, Y = %i"),

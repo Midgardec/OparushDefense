@@ -4,7 +4,10 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Pawn.h"
+#include "Components/SphereComponent.h"
+
 #include "Tower.generated.h"
+
 
 UCLASS()
 class GAME_API ATower : public APawn
@@ -22,6 +25,7 @@ protected:
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
+
 
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
@@ -50,12 +54,34 @@ protected:
 	float TowerLevel = 1.0f;
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Tower|Damage")
 	float DamageAmount = 2.0f;
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Tower|Range")
+	double Range = 600.f;
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Tower|Delay")
+	double BlastDelay;
 	
+	UPROPERTY()
+	TArray<AActor*> Enemies;
+
+	// -----------------------------   setup
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, meta = (AllowPrivateAccess = "true"))
+	USphereComponent* SphereCollision;
+
 public:
 	
+
 	UFUNCTION(BlueprintCallable, Category = "Tower|Place")
 	ATower* Place();
-	//ATower Clone() const;
+	
+	
+	UFUNCTION(BlueprintCallable, Category = "Tower|Overlap")
+	void CheckOverlap();
+	UFUNCTION(BlueprintCallable, Category = "Tower|Collision|Overlap")
+	virtual void OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
+	UFUNCTION(BlueprintCallable, Category = "Tower|Collision|Overlap")
+	virtual void OnOverlapEnd(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex);
+
+	bool SuperClassIsEnemy(const UClass* Input);
+	
 	UPROPERTY()
 	bool Placed;
 

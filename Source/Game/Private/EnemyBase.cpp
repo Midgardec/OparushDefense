@@ -59,7 +59,7 @@ void AEnemyBase::BeginPlay()
     Map->SetTileSize(TILE_SIDE_LEN); 
     Map->ProcessWaypoints();
 	
-	this->SetActorLocation(FVector(Map->StartCell.Y_coord*TILE_SIDE_LEN,Map->StartCell.X_coord*TILE_SIDE_LEN,0));
+	this->SetActorLocation(FVector(Map->StartCell.Y_coord*TILE_SIDE_LEN,Map->StartCell.X_coord*TILE_SIDE_LEN, TILE_SIDE_LEN));
 
 	// Устанавливаем начальный спрайт
 	CurrentSprite = Sprites[EDirection::Right];
@@ -106,7 +106,7 @@ void AEnemyBase::Tick(float DeltaTime)
 
 		const float DistanceToTarget = FVector::Distance(NextLocation, GetActorLocation());
 
-		if (DistanceToTarget > 5.f)
+		if (DistanceToTarget > 10.f)
 		{
 			const FVector Direction = (NextLocation - GetActorLocation()).GetSafeNormal();
 			SetActorLocation(GetActorLocation() + Direction * MoveSpeed * DeltaTime);

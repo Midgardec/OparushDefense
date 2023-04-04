@@ -26,7 +26,7 @@ void AEnemiesSpawner::BeginPlay()
 void AEnemiesSpawner::StartWave()
 {
 	
-	WaveIndex=1;
+	WaveIndex=5;
 	SpawnDelay = 2.f;
 	
 	GetWorldTimerManager().SetTimer(TimerHandler, this, &AEnemiesSpawner::SpawnEnemies, SpawnDelay, true);

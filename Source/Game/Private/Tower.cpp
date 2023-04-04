@@ -4,6 +4,7 @@
 #include "Tower.h"
 
 #include "EnemyBase.h"
+#include "TargetTester.h"
 
 #include "Kismet/GameplayStatics.h"
 
@@ -13,7 +14,7 @@ ATower::ATower()
 {
 	PrimaryActorTick.bCanEverTick = true;
 	SphereCollision = CreateDefaultSubobject<USphereComponent>(TEXT("SphereCollision"));
-	SphereCollision->SetSphereRadius(Range); // задаем радиус сферы
+	SphereCollision->SetSphereRadius(BuyRange); // задаем радиус сферы
 	SphereCollision->SetupAttachment(RootComponent);
 	SphereCollision->OnComponentBeginOverlap.AddDynamic(this, &ATower::OnOverlapBegin);
 	SphereCollision->OnComponentEndOverlap.AddDynamic(this, &ATower::OnOverlapEnd);
@@ -28,6 +29,16 @@ void ATower::BeginPlay()
 	Super::BeginPlay();
 	bIsSpawner = true;
 	Placed = false;
+
+	FString AssetPathName = TEXT("/Script/Engine.StaticMesh'/Game/_Main/tiles/obstacle_block.obstacle_block'");
+	FActorSpawnParameters SpawnParameters = FActorSpawnParameters();
+	SpawnParameters.Owner = this;
+			
+	TargetTester = GetWorld()->SpawnActor<ATargetTester>(ATargetTester::StaticClass(),SpawnParameters);
+	UStaticMesh* Asset = Cast<UStaticMesh>(StaticLoadObject(UStaticMesh::StaticClass(), this, *AssetPathName));
+
+	TargetTester->Mesh->SetStaticMesh(Asset);
+	TargetTester->SceneComponent->SetWorldLocation(FVector( 0, 0, -200.f));
 }
 
 // Called every frame
@@ -37,6 +48,7 @@ void ATower::Tick(float DeltaTime)
 	
 	if(!bIsSpawner && Placed)
 	{
+		SphereCollision->SetSphereRadius(BlastRange);
 		AActor* Enemy = nullptr;
 	
 		if(Enemies.Num() > 0){Enemy = Enemies[0];}
@@ -46,13 +58,15 @@ void ATower::Tick(float DeltaTime)
 			const float DistanceToEnemy = FVector::Distance(GetActorLocation(), Enemy->GetActorLocation());
 			//GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Red,FString::Printf(TEXT("%f"), DistanceToEnemy));
 													 
-			if (DistanceToEnemy <= Range)
+			if (DistanceToEnemy <= BlastRange)
 			{
 				// Attack the enemy
 				// ...
 				GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::White,TEXT("SHOOT"));
-				
-				this->Blast();
+				TargetTester->SceneComponent->SetWorldLocation(FVector( Enemy->GetActorLocation().X, 
+																	Enemy->GetActorLocation().Y, 1000.f));
+				//GetWorldTimerManager().SetTimer(TimerHandler, this, &ATower::Blast, BlastDelay, true);
+				//this->Blast();
 			}
 		}
 	}
@@ -154,18 +168,6 @@ auto ATower::Place() -> ATower*
 bool ATower::SuperClassIsEnemy(const UClass* Input)
 {
 	return Input->IsChildOf(AEnemyBase::StaticClass());
-	
-	/*UClass* SuperClass = Input;
-	while (SuperClass->GetSuperClass())
-	{
-		
-		if(SuperClass->GetName()=="EnemyBase")
-		{
-			return true;
-		}
-		SuperClass = SuperClass->GetSuperClass();
-	}
-	return false;*/
 }
 
 
@@ -189,7 +191,7 @@ void ATower::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor* OtherAc
 		if(SuperClassIsEnemy(OtherActor->GetClass()))
 		{
 			GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Blue,FString::Printf(TEXT("text")));
-			Enemies.Push(OtherActor);
+			Enemies.Add(OtherActor);
 		}
 		
 		
@@ -207,7 +209,7 @@ void ATower::OnOverlapEnd(UPrimitiveComponent* OverlappedComp, AActor* OtherActo
 		if(SuperClassIsEnemy(OtherActor->GetClass()))
 		{
 			GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Red,FString::Printf(TEXT("text")));
-			Enemies.RemoveAtSwap(0, 1, false);
+			Enemies.RemoveAt(0, 1, false);
         }
 	}
 			

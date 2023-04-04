@@ -5,7 +5,7 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Pawn.h"
 #include "Components/SphereComponent.h"
-
+#include "TargetTester.h"
 #include "Tower.generated.h"
 
 
@@ -55,7 +55,9 @@ protected:
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Tower|Damage")
 	float DamageAmount = 2.0f;
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Tower|Range")
-	double Range = 600.f;
+	double BlastRange = 600.f;
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Tower|Range")
+	float BuyRange = 200.f;
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Tower|Delay")
 	double BlastDelay;
 	
@@ -65,6 +67,9 @@ protected:
 	// -----------------------------   setup
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, meta = (AllowPrivateAccess = "true"))
 	USphereComponent* SphereCollision;
+	FTimerHandle TimerHandler;
+	
+	ATargetTester* TargetTester;
 
 public:
 	

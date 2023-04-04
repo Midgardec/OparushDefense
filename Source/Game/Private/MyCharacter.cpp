@@ -292,8 +292,8 @@ void AMyCharacter::PlaceTower()
 		
 		if(bCanPlace)
         {
-			const int X = FMath::Clamp(TowerMemberLocation.X/TILE_SIDE_LEN, 0, Map->mapHeight -1) ;
-			const int Y = FMath::Clamp(TowerMemberLocation.Y/TILE_SIDE_LEN, 0, Map->mapHeight -1) ;
+			const int X = FMath::Clamp(TowerMemberLocation.X/TILE_SIDE_LEN, 0, Map->mapWidth -2) ;
+			const int Y = FMath::Clamp(TowerMemberLocation.Y/TILE_SIDE_LEN, 0, Map->mapHeight -2) ;
 			TowerMemberLocation.X = round((TowerMemberLocationShift.X + this->GetActorLocation().X) / TILE_SIDE_LEN) * TILE_SIDE_LEN;
 			TowerMemberLocation.Y = round((TowerMemberLocationShift.Y + this->GetActorLocation().Y) / TILE_SIDE_LEN) * TILE_SIDE_LEN;
             TowerMemberLocation.X = FMath::Clamp(TowerMemberLocation.X, 0, TILE_SIDE_LEN * (Map->mapWidth-1));
@@ -330,8 +330,8 @@ void AMyCharacter::SpawnTower(float DeltaTime)
 	{
 		TowerMemberLocation.X = round((TowerMemberLocationShift.X + this->GetActorLocation().X) / TILE_SIDE_LEN) * TILE_SIDE_LEN;
 		TowerMemberLocation.Y = round((TowerMemberLocationShift.Y + this->GetActorLocation().Y) / TILE_SIDE_LEN) * TILE_SIDE_LEN;
-		TowerMemberLocation.X = FMath::Clamp(TowerMemberLocation.X, 0, TILE_SIDE_LEN * (Map->mapWidth -1));
-		TowerMemberLocation.Y = FMath::Clamp(TowerMemberLocation.Y, 0, TILE_SIDE_LEN * (Map->mapHeight-1));
+		TowerMemberLocation.X = FMath::Clamp(TowerMemberLocation.X, 0, TILE_SIDE_LEN * (Map->mapWidth -2));
+		TowerMemberLocation.Y = FMath::Clamp(TowerMemberLocation.Y, 0, TILE_SIDE_LEN * (Map->mapHeight-2));
 
 		const FVector Interpolated_Position = UKismetMathLibrary::VInterpTo(TowerMember->GetActorLocation(),
 		                                                                    TowerMemberLocation,

@@ -163,7 +163,6 @@ void AEnemyBase::MoveToWaypoint()
     else
     {
     	canMove=false;
-        //UE_LOG(LogTemp, Warning, TEXT("Reached the end of the path"));
     }
 }
 

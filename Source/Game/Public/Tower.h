@@ -70,6 +70,7 @@ protected:
 	FTimerHandle TimerHandler;
 	
 	ATargetTester* TargetTester;
+	UClass* ProjectileClass;
 
 public:
 	

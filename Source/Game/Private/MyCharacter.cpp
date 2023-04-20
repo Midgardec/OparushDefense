@@ -9,6 +9,7 @@
 #include "Components/BoxComponent.h"
 #include "PaperSprite.h"
 #include "Components/CapsuleComponent.h"
+#include "Components/PostProcessComponent.h"
 
 #include "Engine/Engine.h"
 #include "GameFramework/CharacterMovementComponent.h"
@@ -76,6 +77,18 @@ AMyCharacter::AMyCharacter()
 	SpriteComponent->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 	SpriteComponent->SetupAttachment(RootComponent);
 	SpriteComponent->SetGenerateOverlapEvents(false);
+
+
+///
+/// Post Process Component
+///
+
+	/*PostProcessComponent = CreateDefaultSubobject<UPostProcessComponent>(TEXT("PostProcessComponent"));
+
+	PostProcessComponent->Settings.DepthOfFieldSensorWidth = 144.f;
+	PostProcessComponent->Settings.DepthOfFieldFocalDistance = SpringArmComponent->TargetArmLength;
+	PostProcessComponent->Settings.DepthOfFieldFstop = 0.8f;
+	*/
 	
 }
 
@@ -127,6 +140,8 @@ void AMyCharacter::BeginPlay()
 
 	
 	this->SetActorLocation(FVector(Map->StartCell.Y_coord*TILE_SIDE_LEN,Map->StartCell.X_coord*TILE_SIDE_LEN,0));
+
+
 	
 }
 // Called to bind functionality to input
@@ -152,7 +167,8 @@ void AMyCharacter::Tick(float DeltaTime)
 
 	const float InterpolatedZoom = UKismetMathLibrary::FInterpTo(SpringArmComponent->TargetArmLength, TargetZoom, DeltaTime, ZoomSpeed);
 	this->SpringArmComponent->TargetArmLength = InterpolatedZoom;
-
+	//PostProcessComponent->Settings.DepthOfFieldFocalDistance = SpringArmComponent->TargetArmLength;
+	
 	const FRotator InterpolatedRotation = UKismetMathLibrary::RInterpTo(SpringArmComponent->GetRelativeRotation(), TargetRotation, DeltaTime, RotateSpeed);
 	SpringArmComponent->SetRelativeRotation(InterpolatedRotation);
 

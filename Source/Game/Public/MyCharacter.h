@@ -8,6 +8,7 @@
 #include "ActorFactories/ActorFactoryTriggerBox.h"
 #include "PaperSpriteComponent.h"
 #include "Components/BoxComponent.h"
+#include "Components/PostProcessComponent.h"
 #include "Camera/CameraComponent.h"
 #include "GameFramework/SpringArmComponent.h"
 #include "GameFramework/Character.h"
@@ -93,6 +94,11 @@ private:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, meta=(AllowPrivateAccess = "true"))
 	TObjectPtr<USkeletalMeshComponent> MyMesh;
 
+	/*
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, meta=(AllowPrivateAccess = "true"))
+	UPostProcessComponent* PostProcessComponent;
+	*/
+	
 	// ---- sprite setup vars
 		// Переменная для хранения текущего направления спрайта
 	EDirection CurrentDirection = EDirection::Right;

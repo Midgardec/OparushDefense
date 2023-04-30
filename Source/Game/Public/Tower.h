@@ -31,7 +31,9 @@ public:
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 	float GetCost() const;
 	float GetDamage() const;
+	void SetDamage(float Amount);
 	float GetTowerLevel() const;
+
 	
 	float GetHealth() const;
 	void SetHealth(float Input);
@@ -59,28 +61,26 @@ protected:
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Tower|Range")
 	float BuyRange = 200.f;
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Tower|Delay")
-	double BlastDelay;
+	double BlastDelay = 1.f;
 	
 	UPROPERTY()
-	TArray<AActor*> Enemies;
+	TArray<AActor*> Enemies_Extra;
 
 	// -----------------------------   setup
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, meta = (AllowPrivateAccess = "true"))
 	USphereComponent* SphereCollision;
 	FTimerHandle TimerHandler;
-	
-	ATargetTester* TargetTester;
-	UClass* ProjectileClass;
 
+	UPROPERTY()
+	ATargetTester* TargetTester;
+	
+	
 public:
 	
 
 	UFUNCTION(BlueprintCallable, Category = "Tower|Place")
 	ATower* Place();
 	
-	
-	UFUNCTION(BlueprintCallable, Category = "Tower|Overlap")
-	void CheckOverlap();
 	UFUNCTION(BlueprintCallable, Category = "Tower|Collision|Overlap")
 	virtual void OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
 	UFUNCTION(BlueprintCallable, Category = "Tower|Collision|Overlap")
@@ -94,5 +94,20 @@ public:
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Tower|Damage")
     bool bIsSpawner;
     
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Tower|Damage")
+	bool bIsAllowedToShoot= false;
+
+	UPROPERTY()
+	TArray<AActor*> Enemies;
+
+	UPROPERTY()
+	AActor* EnemyToShoot;
+	UPROPERTY()
+	int EnemyToShoot_index = 0;
+
+	// Projectile class to spawn.
+	UPROPERTY(EditAnywhere, Category = Projectile)
+	TSubclassOf<class AProjectileBase> ProjectileClass;
 	
+
 };

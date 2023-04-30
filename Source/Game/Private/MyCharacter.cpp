@@ -16,8 +16,8 @@
 #define DefaultRotationPitch -45
 #define TM_LOCATION_SHIFT 220
 #define TILE_SIDE_LEN 200
-#define ARM_LENGTH_MIN 2000.f
-#define ARM_LENGTH_MAX 15000.f
+#define ARM_LENGTH_MIN 1000.f
+#define ARM_LENGTH_MAX 10000.f
 #define FOV 20
 // Sets default values
 AMyCharacter::AMyCharacter()
@@ -44,6 +44,11 @@ AMyCharacter::AMyCharacter()
 	CameraComponent->SetupAttachment(SpringArmComponent, USpringArmComponent::SocketName);
 	CameraComponent->bUsePawnControlRotation = false;
 	CameraComponent->FieldOfView = FOV;
+
+	/*CineCameraComponent = CreateDefaultSubobject<UCineCameraComponent>(TEXT("CineCameraComponent"));
+	CineCameraComponent->SetupAttachment(SpringArmComponent, USpringArmComponent::SocketName);
+	CineCameraComponent->bUsePawnControlRotation = false;
+	CineCameraComponent->FieldOfView = FOV;*/
 ///
 ///	Collision setup
 /// 
@@ -104,7 +109,7 @@ void AMyCharacter::BeginPlay()
 	
 	const FRotator Rotation = SpringArmComponent->GetRelativeRotation();
 	
-	TargetRotation = FRotator(Rotation.Pitch + DefaultRotationPitch, Rotation.Yaw, 0.0f);
+	TargetRotation = FRotator( DefaultRotationPitch, 0.f, 0.0f);
 
 	coinsAmount = 10;
 	nutsAmount = 10;

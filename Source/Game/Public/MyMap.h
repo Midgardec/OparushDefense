@@ -33,7 +33,7 @@ struct FCoords
 public:
 	int X_coord;
 	int Y_coord;
-	
+	int Index;
 };
 
 UCLASS()
@@ -91,7 +91,7 @@ public:
 	
 	UPROPERTY(EditAnywhere)
 	// ReSharper disable once UnrealHeaderToolError
-	TArray<ANodePoint*> Nodes ;
+	TArray<FCoords> Nodes ;
 	UPROPERTY(EditAnywhere)
 	TArray<ANodePoint*> Nodes_Pre;
 

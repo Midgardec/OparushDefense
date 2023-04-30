@@ -29,6 +29,7 @@ void ATower::BeginPlay()
 	Super::BeginPlay();
 	bIsSpawner = true;
 	Placed = false;
+	EnemyToShoot = nullptr;
 
 	FString AssetPathName = TEXT("/Script/Engine.StaticMesh'/Game/_Main/tiles/obstacle_block.obstacle_block'");
 	FActorSpawnParameters SpawnParameters = FActorSpawnParameters();
@@ -39,6 +40,11 @@ void ATower::BeginPlay()
 
 	TargetTester->Mesh->SetStaticMesh(Asset);
 	TargetTester->SceneComponent->SetWorldLocation(FVector(0, 0, -200.f));
+
+
+	GetWorldTimerManager().SetTimer(TimerHandler, this, &ATower::Blast, BlastDelay, true);
+
+	SetDamage(20.f);
 }
 
 // Called every frame
@@ -49,28 +55,39 @@ void ATower::Tick(float DeltaTime)
 	if (!bIsSpawner && Placed)
 	{
 		SphereCollision->SetSphereRadius(BlastRange);
-		AActor* Enemy = nullptr;
+		float minDistance = 10000000000.f;
+		UGameplayStatics::GetAllActorsOfClass(this, AEnemyBase::StaticClass(), Enemies);
 
-		if (Enemies.Num() > 0) { Enemy = Enemies[0]; }
+		
 
-		if (IsValid(Enemy)) //->IsPendingKill())
+		for (auto Enemy : Enemies)
 		{
-			const float DistanceToEnemy = FVector::Distance(GetActorLocation(), Enemy->GetActorLocation());
+			const float Distance = FVector::Distance(GetActorLocation(), Enemy->GetActorLocation());
+
+			if (Distance <= minDistance)
+			{
+				minDistance = Distance;
+				EnemyToShoot = Enemy;
+			}
+		}
+		if (Enemies.Num() == 0) { bIsAllowedToShoot = false; }
+
+		if (IsValid(EnemyToShoot)) //->IsPendingKill())
+		{
+			const float DistanceToEnemy = FVector::Distance(GetActorLocation(), EnemyToShoot->GetActorLocation());
 			//GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Red,FString::Printf(TEXT("%f"), DistanceToEnemy));
 
 			if (DistanceToEnemy <= BlastRange)
 			{
-				// Attack the enemy
-				// ...
-				TargetTester->isTarget = true;
-				GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::White,TEXT("SHOOT"));
-				TargetTester->SceneComponent->SetWorldLocation(FVector(Enemy->GetActorLocation().X,
-				                                                       Enemy->GetActorLocation().Y, 1000.f));
-				//GetWorldTimerManager().SetTimer(TimerHandler, this, &ATower::Blast, BlastDelay, true);
-				//this->Blast();
-			}else
+				bIsAllowedToShoot = true;
+			}
+			else
 			{
-				TargetTester->isTarget = false;
+				if (bIsAllowedToShoot)
+				{
+					EnemyToShoot_index = (EnemyToShoot_index + 1) % Enemies.Num();
+				}
+				bIsAllowedToShoot = false;
 			}
 		}
 	}
@@ -90,6 +107,11 @@ float ATower::GetCost() const
 float ATower::GetDamage() const
 {
 	return DamageAmount;
+}
+
+void ATower::SetDamage(float Amount)
+{
+	DamageAmount = Amount;
 }
 
 float ATower::GetTowerLevel() const
@@ -121,45 +143,40 @@ void ATower::Heal(const float Input)
 
 void ATower::Blast()
 {
-	/*TArray<AActor*> Enemies;
-	UGameplayStatics::GetAllActorsOfClass(GetWorld(), AEnemyBase::StaticClass(), Enemies);
-	*/
-
-	/*if(TargetTester->isTarget)
+	if (!bIsAllowedToShoot)
 	{
-		FVector TargetPosition = FVector(TargetTester->GetActorLocation().X,TargetTester->GetActorLocation().Y,0);
-		FVector ProjectileStartPosition = TargetTester->SceneComponent->GetComponentLocation();
-		FRotator ProjectileRotation = (TargetPosition - ProjectileStartPosition).Rotation();
+		return;
+	}
 
-		// Spawn projectile actor
-		AProjectileBase* Projectile = GetWorld()->SpawnActor<AProjectileBase>(ProjectileClass, ProjectileStartPosition, ProjectileRotation);
-		if (Projectile)
-		{
-			// Set projectile parameters
-			Projectile->SetTarget(TargetTester);
-			Projectile->SetDamage(GetDamage());
-			Projectile->SetSpeed(/*ProjectileSpeed#1#);
-		}
-	}*/
 	/// TODO: Create a new projectile and set its properties
-	// AProjectile* Projectile = GetWorld()->SpawnActor<AProjectile>(ProjectileClass, GetActorLocation(), GetActorRotation());
-	// Projectile->SetDamage(DamageAmount);
-	// Projectile->SetSpeed(ProjectileSpeed);
 
-	// TODO: Calculate the direction to the enemy and set the projectile's velocity
-	// FVector Direction = (Enemy->GetActorLocation() - GetActorLocation()).GetSafeNormal();
-	// Projectile->SetVelocity(Direction * ProjectileSpeed);
 
-	// Set the projectile's lifespan and start moving it
-	// Projectile->SetLifeSpan(ProjectileRange / ProjectileSpeed);
-	// Projectile->StartMoving();
+	FActorSpawnParameters SpawnParams;
+	SpawnParams.Owner = this;
+	SpawnParams.Instigator = GetInstigator();
 
-	/*else
+	ProjectileClass = AProjectileBase::StaticClass();
+	AProjectileBase* Projectile = GetWorld()->SpawnActor<AProjectileBase>(ProjectileClass, GetActorLocation(),
+	                                                                      GetActorRotation(), SpawnParams);
+
+	
+	float Damage_ = this->GetDamage();
+	Projectile->SetDamage(Damage_);
+
+	constexpr float ProjectileSpeed = 1000.f;
+	Projectile->SetSpeed(ProjectileSpeed);
+
+	Projectile->SetTarget(EnemyToShoot);
+
+	Projectile->SetType(EType::AutoTarget);
+
+	// Spawn the projectile at the muzzle.
+	if (Projectile)
 	{
-		Enemies.RemoveAtSwap(0, 1, false);
-		GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Red,
-												 FString::Printf(TEXT("deleted")));
-	}*/
+		// Set the projectile's initial trajectory.
+		FVector LaunchDirection = (EnemyToShoot->GetActorLocation() - GetActorLocation()).GetSafeNormal();
+		Projectile->SetVelocity(LaunchDirection);
+	}
 }
 
 ATower* ATower::Place()
@@ -181,37 +198,13 @@ bool ATower::SuperClassIsEnemy(const UClass* Input)
 }
 
 
-void ATower::CheckOverlap()
-{
-}
-
-
 void ATower::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor* OtherActor,
                             UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep,
                             const FHitResult& SweepResult)
 {
-	if (OtherActor != this)
-	{
-		/*TArray<AActor*> OverlappingActors;
-		SphereCollision->GetOverlappingActors(OverlappingActors, AEnemyBase::StaticClass());*/
-
-		if (SuperClassIsEnemy(OtherActor->GetClass()))
-		{
-			GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Blue, FString::Printf(TEXT("text")));
-			Enemies.Add(OtherActor);
-		}
-	}
 }
 
 void ATower::OnOverlapEnd(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp,
                           int32 OtherBodyIndex)
 {
-	if (OtherActor != this)
-	{
-		if (SuperClassIsEnemy(OtherActor->GetClass()))
-		{
-			GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Red, FString::Printf(TEXT("text")));
-			Enemies.RemoveAt(0, 1, false);
-		}
-	}
 }

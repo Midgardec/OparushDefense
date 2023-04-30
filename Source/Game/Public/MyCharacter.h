@@ -71,6 +71,7 @@ protected:
 public:
 	UPROPERTY(BlueprintReadWrite,EditAnywhere, meta = (AllowPrivateAccess = "true"))
 	UBoxComponent* Collision;
+	
 	FVector Direction;
 	bool bReadyForWave = false;
 
@@ -94,6 +95,10 @@ private:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, meta=(AllowPrivateAccess = "true"))
 	TObjectPtr<USkeletalMeshComponent> MyMesh;
 
+	/*UPROPERTY(BlueprintReadWrite, VisibleAnywhere, meta = (AllowPrivateAccess = "true"))
+	UCineCameraComponent* CineCameraComponent;
+	*/
+
 	/*
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, meta=(AllowPrivateAccess = "true"))
 	UPostProcessComponent* PostProcessComponent;
@@ -115,7 +120,6 @@ private:
 	UPROPERTY(BlueprintReadWrite, Category = "Sprite", meta = (AllowPrivateAccess = "true"))
 	UPaperSprite* CurrentSprite;
 	
-
 
 	
 	UPROPERTY()

@@ -30,7 +30,6 @@ AMyMap::AMyMap()
 {
 	PrimaryActorTick.bCanEverTick = false;
 	ConvertMapFromImage();
-	const FName Tile_name = "tile_default";
 }
 
 void AMyMap::SetTileSize(int T_Size)
@@ -40,13 +39,10 @@ void AMyMap::SetTileSize(int T_Size)
 
 void AMyMap::SpawnMap()
 {
-	
-	
 	for (int i = 0; i < this->mapHeight; i++)
 	{
 		for (int j = 0; j < this->mapWidth; j++)
 		{
-			
 			if (Map_Cells[i][j] == 0)
 			{
 				FString AssetPathName;
@@ -78,35 +74,35 @@ void AMyMap::SpawnMap()
 				FString AssetPathName;
 				if (j > 0 && Map_Cells[i][j - 1] != 1 && i > 0 && Map_Cells[i - 1][j] != 1)
 				{
-					// TODO: turn ╚    ///  ╗╝╚╔
+					// turn ╚    ///  ╗╝╚╔
 					AssetPathName = TEXT(TURN_LU);
 				}
 				else if (j > 0 && Map_Cells[i][j - 1] != 1 && i < mapHeight && Map_Cells[i + 1][j] != 1)
 				{
-					// TODO: turn ╔    ///  ╗╝╚╔
+					// turn ╔    ///  ╗╝╚╔
 					AssetPathName = TEXT(TURN_UR);
 				}
 				else if (j < mapWidth && Map_Cells[i][j + 1] != 1 && i < mapHeight && Map_Cells[i + 1][j] != 1)
 				{
-					// TODO: turn ╗    ///  ╗╝╚╔
+					// turn ╗    ///  ╗╝╚╔
 					AssetPathName = TEXT(TURN_RD);
 				}
 				else if (j < mapWidth && Map_Cells[i][j + 1] != 1 && i > 0 && Map_Cells[i - 1][j] != 1)
 				{
-					// TODO: turn ╝    ///  ╗╝╚╔
+					//  turn ╝    ///  ╗╝╚╔
 					AssetPathName = TEXT(TURN_DL);
 				}
 				else if ((j < mapWidth && Map_Cells[i][j + 1] != 1 && j > 0 && Map_Cells[i][j - 1] != 1) && (i <
 					mapHeight && Map_Cells[i + 1][j] == 1 || i == mapHeight) && (i > 0 && Map_Cells[i - 1][j] == 1 || i
 					== 0))
 				{
-					// TODO: straight ║   ///  ║═
+					// straight ║   ///  ║═
 					AssetPathName = TEXT(STRAIGHT_VERT);
 				}
 				else if ((j < mapWidth && Map_Cells[i][j + 1] == 1 || j == mapWidth) && (j > 0 && Map_Cells[i][j - 1] ==
 					1 || j == 0) && (i < mapHeight && Map_Cells[i + 1][j] != 1 && i > 0 && Map_Cells[i - 1][j] != 1))
 				{
-					// TODO: straight ═   ///  ║═
+					// straight ═   ///  ║═
 					AssetPathName = TEXT(STRAIGHT_HORIZ);
 				}
 				//AssetPathName = TEXT("/Script/Engine.StaticMesh'/Game/_Main/Voxels/path/path.path'");
@@ -141,8 +137,8 @@ void AMyMap::SpawnMap()
 			}
 		}
 	}
-	bool a = GetWorld()->IsNavigationRebuilt();
-	GEngine->AddOnScreenDebugMessage(-1, 10.f, FColor::White, FString::Printf(TEXT("%i"), a));
+	/*bool a = GetWorld()->IsNavigationRebuilt();
+	GEngine->AddOnScreenDebugMessage(-1, 10.f, FColor::White, FString::Printf(TEXT("%i"), a));*/
 	UpdateNavMeshik();
 }
 
@@ -266,13 +262,13 @@ void AMyMap::ProcessWaypoints()
 				FActorSpawnParameters SpawnParameters = FActorSpawnParameters();
 				SpawnParameters.Owner = this;
 
-				ANodePoint* Point = GetWorld()->SpawnActor<ANodePoint>(ANodePoint::StaticClass(), SpawnParameters);
+				//ANodePoint* Point = GetWorld()->SpawnActor<ANodePoint>(ANodePoint::StaticClass(), SpawnParameters);
 
-
+				FCoords Point;
 				Nodes.Add(Point);
-				Nodes[Node_Index]->X_Coord = x;
-				Nodes[Node_Index]->Y_Coord = y;
-				Nodes[Node_Index]->Index = Node_Index;
+				Nodes[Node_Index].X_coord = x;
+				Nodes[Node_Index].Y_coord = y;
+				Nodes[Node_Index].Index = Node_Index;
 
 				Node_Index++;
 
@@ -288,12 +284,12 @@ void AMyMap::ProcessWaypoints()
 				FActorSpawnParameters SpawnParameters = FActorSpawnParameters();
 				SpawnParameters.Owner = this;
 
-				ANodePoint* Point = GetWorld()->SpawnActor<ANodePoint>(ANodePoint::StaticClass(), SpawnParameters);
 
+				FCoords Point;
 				Nodes.Add(Point);
-				Nodes[Node_Index]->X_Coord = x;
-				Nodes[Node_Index]->Y_Coord = y;
-				Nodes[Node_Index]->Index = Node_Index;
+				Nodes[Node_Index].X_coord = x;
+				Nodes[Node_Index].Y_coord = y;
+				Nodes[Node_Index].Index = Node_Index;
 				Node_Index++;
 				Direction = FVector::DownVector;
 				y++;
@@ -307,12 +303,12 @@ void AMyMap::ProcessWaypoints()
 			FActorSpawnParameters SpawnParameters = FActorSpawnParameters();
 			SpawnParameters.Owner = this;
 
-			ANodePoint* point = GetWorld()->SpawnActor<ANodePoint>(ANodePoint::StaticClass(), SpawnParameters);
 
-			Nodes.Add(point);
-			Nodes[Node_Index]->X_Coord = x;
-			Nodes[Node_Index]->Y_Coord = y;
-			Nodes[Node_Index]->Index = Node_Index;
+			FCoords Point;
+			Nodes.Add(Point);
+			Nodes[Node_Index].X_coord = x;
+			Nodes[Node_Index].Y_coord = y;
+			Nodes[Node_Index].Index = Node_Index;
 			Node_Index++;
 			GEngine->AddOnScreenDebugMessage(-1, 15.f, FColor::Yellow,
 			                                 FString::Printf(
@@ -333,12 +329,11 @@ void AMyMap::ProcessWaypoints()
 				FActorSpawnParameters SpawnParameters = FActorSpawnParameters();
 				SpawnParameters.Owner = this;
 
-				ANodePoint* point = GetWorld()->SpawnActor<ANodePoint>(ANodePoint::StaticClass(), SpawnParameters);
-
-				Nodes.Add(point);
-				Nodes[Node_Index]->X_Coord = x;
-				Nodes[Node_Index]->Y_Coord = y;
-				Nodes[Node_Index]->Index = Node_Index;
+				FCoords Point;
+				Nodes.Add(Point);
+				Nodes[Node_Index].X_coord = x;
+				Nodes[Node_Index].Y_coord = y;
+				Nodes[Node_Index].Index = Node_Index;
 				Node_Index++;
 				Direction = FVector::UpVector;
 				y--;
@@ -352,12 +347,11 @@ void AMyMap::ProcessWaypoints()
 				FActorSpawnParameters SpawnParameters = FActorSpawnParameters();
 				SpawnParameters.Owner = this;
 
-				ANodePoint* point = GetWorld()->SpawnActor<ANodePoint>(ANodePoint::StaticClass(), SpawnParameters);
-
-				Nodes.Add(point);
-				Nodes[Node_Index]->X_Coord = x;
-				Nodes[Node_Index]->Y_Coord = y;
-				Nodes[Node_Index]->Index = Node_Index;
+				FCoords Point;
+				Nodes.Add(Point);
+				Nodes[Node_Index].X_coord = x;
+				Nodes[Node_Index].Y_coord = y;
+				Nodes[Node_Index].Index = Node_Index;
 				Node_Index++;
 
 				Direction = FVector::DownVector;
@@ -371,12 +365,11 @@ void AMyMap::ProcessWaypoints()
 			FActorSpawnParameters SpawnParameters = FActorSpawnParameters();
 			SpawnParameters.Owner = this;
 
-			ANodePoint* point = GetWorld()->SpawnActor<ANodePoint>(ANodePoint::StaticClass(), SpawnParameters);
-
-			Nodes.Add(point);
-			Nodes[Node_Index]->X_Coord = x;
-			Nodes[Node_Index]->Y_Coord = y;
-			Nodes[Node_Index]->Index = Node_Index;
+			FCoords Point;
+			Nodes.Add(Point);
+			Nodes[Node_Index].X_coord = x;
+			Nodes[Node_Index].Y_coord = y;
+			Nodes[Node_Index].Index = Node_Index;
 			Node_Index++;
 
 			GEngine->AddOnScreenDebugMessage(-1, 15.f, FColor::Blue,
@@ -397,12 +390,11 @@ void AMyMap::ProcessWaypoints()
 				FActorSpawnParameters SpawnParameters = FActorSpawnParameters();
 				SpawnParameters.Owner = this;
 
-				ANodePoint* point = GetWorld()->SpawnActor<ANodePoint>(ANodePoint::StaticClass(), SpawnParameters);
-
-				Nodes.Add(point);
-				Nodes[Node_Index]->X_Coord = x;
-				Nodes[Node_Index]->Y_Coord = y;
-				Nodes[Node_Index]->Index = Node_Index;
+				FCoords Point;
+				Nodes.Add(Point);
+				Nodes[Node_Index].X_coord = x;
+				Nodes[Node_Index].Y_coord = y;
+				Nodes[Node_Index].Index = Node_Index;
 				Node_Index++;
 
 				Direction = FVector::LeftVector;
@@ -415,12 +407,11 @@ void AMyMap::ProcessWaypoints()
 				FActorSpawnParameters SpawnParameters = FActorSpawnParameters();
 				SpawnParameters.Owner = this;
 
-				ANodePoint* point = GetWorld()->SpawnActor<ANodePoint>(ANodePoint::StaticClass(), SpawnParameters);
-
-				Nodes.Add(point);
-				Nodes[Node_Index]->X_Coord = x;
-				Nodes[Node_Index]->Y_Coord = y;
-				Nodes[Node_Index]->Index = Node_Index;
+				FCoords Point;
+				Nodes.Add(Point);
+				Nodes[Node_Index].X_coord = x;
+				Nodes[Node_Index].Y_coord = y;
+				Nodes[Node_Index].Index = Node_Index;
 				Node_Index++;
 
 				Direction = FVector::RightVector;
@@ -433,12 +424,11 @@ void AMyMap::ProcessWaypoints()
 			FActorSpawnParameters SpawnParameters = FActorSpawnParameters();
 			SpawnParameters.Owner = this;
 
-			ANodePoint* point = GetWorld()->SpawnActor<ANodePoint>(ANodePoint::StaticClass(), SpawnParameters);
-
-			Nodes.Add(point);
-			Nodes[Node_Index]->X_Coord = x;
-			Nodes[Node_Index]->Y_Coord = y;
-			Nodes[Node_Index]->Index = Node_Index;
+			FCoords Point;
+			Nodes.Add(Point);
+			Nodes[Node_Index].X_coord = x;
+			Nodes[Node_Index].Y_coord = y;
+			Nodes[Node_Index].Index = Node_Index;
 			Node_Index++;
 			GEngine->AddOnScreenDebugMessage(-1, 15.f, FColor::Red,
 			                                 FString::Printf(
@@ -457,12 +447,11 @@ void AMyMap::ProcessWaypoints()
 				FActorSpawnParameters SpawnParameters = FActorSpawnParameters();
 				SpawnParameters.Owner = this;
 
-				ANodePoint* point = GetWorld()->SpawnActor<ANodePoint>(ANodePoint::StaticClass(), SpawnParameters);
-
-				Nodes.Add(point);
-				Nodes[Node_Index]->X_Coord = x;
-				Nodes[Node_Index]->Y_Coord = y;
-				Nodes[Node_Index]->Index = Node_Index;
+				FCoords Point;
+				Nodes.Add(Point);
+				Nodes[Node_Index].X_coord = x;
+				Nodes[Node_Index].Y_coord = y;
+				Nodes[Node_Index].Index = Node_Index;
 				Node_Index++;
 
 				Direction = FVector::LeftVector;
@@ -474,12 +463,11 @@ void AMyMap::ProcessWaypoints()
 				FActorSpawnParameters SpawnParameters = FActorSpawnParameters();
 				SpawnParameters.Owner = this;
 
-				ANodePoint* point = GetWorld()->SpawnActor<ANodePoint>(ANodePoint::StaticClass(), SpawnParameters);
-
-				Nodes.Add(point);
-				Nodes[Node_Index]->X_Coord = x;
-				Nodes[Node_Index]->Y_Coord = y;
-				Nodes[Node_Index]->Index = Node_Index;
+				FCoords Point;
+				Nodes.Add(Point);
+				Nodes[Node_Index].X_coord = x;
+				Nodes[Node_Index].Y_coord = y;
+				Nodes[Node_Index].Index = Node_Index;
 				Node_Index++;
 
 				Direction = FVector::RightVector;
@@ -493,12 +481,11 @@ void AMyMap::ProcessWaypoints()
 			FActorSpawnParameters SpawnParameters = FActorSpawnParameters();
 			SpawnParameters.Owner = this;
 
-			ANodePoint* point = GetWorld()->SpawnActor<ANodePoint>(ANodePoint::StaticClass(), SpawnParameters);
-
-			Nodes.Add(point);
-			Nodes[Node_Index]->X_Coord = x;
-			Nodes[Node_Index]->Y_Coord = y;
-			Nodes[Node_Index]->Index = Node_Index;
+			FCoords Point;
+			Nodes.Add(Point);
+			Nodes[Node_Index].X_coord = x;
+			Nodes[Node_Index].Y_coord = y;
+			Nodes[Node_Index].Index = Node_Index;
 			Node_Index++;
 
 			GEngine->AddOnScreenDebugMessage(-1, 15.f, FColor::White,
@@ -521,8 +508,8 @@ void AMyMap::SpawnWaypoints()
 
 		AWaypoint* Waypoint = GetWorld()->SpawnActor<AWaypoint>(
 			FVector(), FRotator(), SpawnParameters);
-		Waypoint->SetActorLocation(FVector(Node->X_Coord * TILE_SIDE_LEN, Node->Y_Coord * TILE_SIDE_LEN, 250));
-		Waypoint->SetWaypoinOrder(Node->Index);
+		Waypoint->SetActorLocation(FVector(Node.X_coord * TILE_SIDE_LEN, Node.Y_coord * TILE_SIDE_LEN, 250));
+		Waypoint->SetWaypoinOrder(Node.Index);
 		Waypoint->GetStaticMeshComponent()->SetMobility(EComponentMobility::Movable);
 	}
 }

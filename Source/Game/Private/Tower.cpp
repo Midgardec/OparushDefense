@@ -159,7 +159,7 @@ void ATower::Blast()
 	AProjectileBase* Projectile = GetWorld()->SpawnActor<AProjectileBase>(ProjectileClass, GetActorLocation(),
 	                                                                      GetActorRotation(), SpawnParams);
 
-	
+
 	float Damage_ = this->GetDamage();
 	Projectile->SetDamage(Damage_);
 

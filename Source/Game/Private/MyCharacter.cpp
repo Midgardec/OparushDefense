@@ -14,7 +14,7 @@
 #include "Engine/Engine.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #define DefaultRotationPitch -45
-#define TM_LOCATION_SHIFT 220
+#define TM_LOCATION_SHIFT 100
 #define TILE_SIDE_LEN 200
 #define ARM_LENGTH_MIN 1000.f
 #define ARM_LENGTH_MAX 10000.f
@@ -37,6 +37,7 @@ AMyCharacter::AMyCharacter()
 /// 
 	SpringArmComponent = CreateDefaultSubobject<USpringArmComponent>(TEXT("SpringArmComponent"));
 	SpringArmComponent->SetupAttachment(GetMesh());
+	
 	SpringArmComponent->TargetArmLength = ARM_LENGTH_MIN;
 	SpringArmComponent->bDoCollisionTest = false;
 	
@@ -107,7 +108,8 @@ void AMyCharacter::BeginPlay()
 	
 	
 	
-	const FRotator Rotation = SpringArmComponent->GetRelativeRotation();
+	/*const FRotator Rotation = SpringArmComponent->GetRelativeRotation();
+	*/
 	
 	TargetRotation = FRotator( DefaultRotationPitch, 0.f, 0.0f);
 
@@ -138,7 +140,7 @@ void AMyCharacter::BeginPlay()
 
 	// Устанавливаем начальный спрайт
 	CurrentSprite = Sprites[EDirection::Right];
-	SpriteComponent->SetRelativeRotation(FRotator(90.0f, 90.f, 0.0f));
+	SpriteComponent->SetWorldRotation(FRotator(90.0f, 90.f, 0.0f));
 	SpriteComponent->SetSprite(CurrentSprite);
 	SpriteComponent->SetWorldScale3D(FVector(10.0f, 10.0f, 10.0f));
 

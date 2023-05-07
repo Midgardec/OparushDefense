@@ -22,8 +22,14 @@
 #define TURN_DL "/Script/Engine.StaticMesh'/Game/_Main/_ROAD_TILES/fixed/ANGLE_LEFT_UP_Plane_2356.ANGLE_LEFT_UP_Plane_2356'";
 #define STRAIGHT_VERT "/Script/Engine.StaticMesh'/Game/_Main/_ROAD_TILES/fixed/VERTICAL_2_Plane_2357.VERTICAL_2_Plane_2357'";
 #define STRAIGHT_HORIZ "/Script/Engine.StaticMesh'/Game/_Main/_ROAD_TILES/fixed/HORIZONTAL_1_Plane_2354.HORIZONTAL_1_Plane_2354'";
-#define GRASS_T1 "/Script/Engine.StaticMesh'/Game/_Main/_ROAD_TILES/fixed/GRASS_0_Plane_2352.GRASS_0_Plane_2352'";
-#define PLACED "/Script/Engine.StaticMesh'/Game/_Main/_ROAD_TILES/fixed/GRASS_0_Plane_2352.GRASS_0_Plane_2352'";
+
+#define GRASS_T1 "/Script/Engine.StaticMesh'/Game/_Main/_GRASS_TILES/4_T_Plane_026.4_T_Plane_026'";
+#define GRASS_T2 "/Script/Engine.StaticMesh'/Game/_Main/_GRASS_TILES/3_T_Plane_023.3_T_Plane_023'";
+#define GRASS_T3 "/Script/Engine.StaticMesh'/Game/_Main/_GRASS_TILES/7_T_Plane_028.7_T_Plane_028'";
+#define GRASS_T4 "/Script/Engine.StaticMesh'/Game/_Main/_GRASS_TILES/9_T_Plane_030.9_T_Plane_030'";
+
+#define PLACED "/Script/Engine.StaticMesh'/Game/_Main/_GRASS_TILES/4_T_Plane_026.4_T_Plane_026'";
+
 #define SIZER FVector(3.f,3.f,3.f)
 
 AMyMap::AMyMap()
@@ -47,15 +53,46 @@ void AMyMap::SpawnMap()
 			{
 				FString AssetPathName;
 				// TODO: random seed
-				float rs = 0.1;
-				if (rs < 0.2f)
+				FRotator Rotator = FRotator(0, 0, 0);
+				int32 RandomNumber = FMath::RandRange(0, 3);
+
+				switch (RandomNumber)
 				{
+				case 0:
 					AssetPathName = TEXT(GRASS_T1);
+					break;
+				case 1:
+					AssetPathName = TEXT(GRASS_T2);
+					break;
+				case 2:
+					AssetPathName = TEXT(GRASS_T3);
+					break;
+				case 3:
+					AssetPathName = TEXT(GRASS_T4);
+					break;
+				default:
+					AssetPathName = TEXT(GRASS_T1);
+					break;
 				}
-				else
+
+				/*int32 RandomRotatorNumber = FMath::RandRange(0, 3);
+				switch (RandomRotatorNumber)
 				{
-					// TODO: other references to tiles
-				}
+				case 0:
+					Rotator = FRotator(0, 0, 0);
+					break;
+				case 1:
+					Rotator = FRotator(0, 90.f, 0);
+					break;
+				case 2:
+					Rotator = FRotator(0, -90.f, 0);
+					break;
+				case 3:
+					Rotator = FRotator(0, -180.f, 0);
+					break;
+				default:
+					break;
+				}*/
 
 				FActorSpawnParameters SpawnParameters = FActorSpawnParameters();
 				SpawnParameters.Owner = this;
@@ -66,6 +103,7 @@ void AMyMap::SpawnMap()
 				Tiles_Cells[i].Add(Tile);
 				Tiles_Cells[i][j]->Mesh->SetStaticMesh(Asset);
 				Tiles_Cells[i][j]->Mesh->SetWorldScale3D(SIZER);
+				Tiles_Cells[i][j]->Mesh->SetWorldRotation(Rotator);
 				Tiles_Cells[i][j]->SceneComponent->SetWorldLocation(FVector(
 					i * TILE_SIDE_LEN, j * TILE_SIDE_LEN, 0 * TILE_SIDE_LEN / 2));
 			}
@@ -526,8 +564,8 @@ void AMyMap::MapChange(const int i, const int j, std::string action)
 
 		//Tiles_Cells[i].Add(Tile);
 
-		Tiles_Cells[i][j]->Mesh->SetStaticMesh(Asset);
-		Tiles_Cells[i][j]->Mesh->SetWorldScale3D(SIZER);
+		//Tiles_Cells[i][j]->Mesh->SetStaticMesh(Asset);
+		//Tiles_Cells[i][j]->Mesh->SetWorldScale3D(SIZER);
 		//Tiles_Cells[i][j]->SceneComponent->SetWorldLocation(FVector( i * TILE_SIDE_LEN, j * TILE_SIDE_LEN, -200));
 	}
 	if (action == "DESTROYED")
@@ -539,8 +577,8 @@ void AMyMap::MapChange(const int i, const int j, std::string action)
 
 		//Tiles_Cells[i].Add(Tile);
 
-		Tiles_Cells[i][j]->Mesh->SetStaticMesh(Asset);
-		Tiles_Cells[i][j]->Mesh->SetWorldScale3D(SIZER);
+		//Tiles_Cells[i][j]->Mesh->SetStaticMesh(Asset);
+		//Tiles_Cells[i][j]->Mesh->SetWorldScale3D(SIZER);
 	}
 }
 

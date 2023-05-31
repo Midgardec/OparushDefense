@@ -4,6 +4,8 @@
 
 #include "CoreMinimal.h"
 #include "MyCharacter.h"
+#include "TimerManager.h"
+#include "Engine/World.h"
 #include "GameFramework/Actor.h"
 #include "EnemiesSpawner.generated.h"
 

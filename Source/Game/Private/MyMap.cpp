@@ -1,6 +1,5 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
-
 #include "MyMap.h"
 #include <cstdio>
 #include <Game/bitmap_image.hpp>
@@ -13,8 +12,8 @@
 #include "Engine/Engine.h"
 #include "NavigationSystem.h"
 #include "NavigationData.h"
+#include "Tower.h"
 #include "Engine/World.h"
-
 
 #define TURN_LU "/Script/Engine.StaticMesh'/Game/_Main/_ROAD_TILES/fixed/Plane_012_Plane_2350.Plane_012_Plane_2350'";
 #define TURN_UR "/Script/Engine.StaticMesh'/Game/_Main/_ROAD_TILES/fixed/Plane_017_Plane_2355.Plane_017_Plane_2355'";
@@ -30,7 +29,13 @@
 
 #define PLACED "/Script/Engine.StaticMesh'/Game/_Main/_GRASS_TILES/4_T_Plane_026.4_T_Plane_026'";
 
-#define SIZER FVector(3.f,3.f,3.f)
+#define FENCE_OPP "/Script/Engine.StaticMesh'/Game/_Main/_FENCE_TILES/3_Plane_005.3_Plane_005'"
+#define FENCE_ANGULAR "/Script/Engine.StaticMesh'/Game/_Main/_FENCE_TILES/4_Plane_010.4_Plane_010'"
+#define FENCE_SNGL "/Script/Engine.StaticMesh'/Game/_Main/_FENCE_TILES/2_Plane_011.2_Plane_011'"
+#define FENCE_ALLSIDE "/Script/Engine.StaticMesh'/Game/_Main/_FENCE_TILES/5_Plane_007.5_Plane_007'"
+#define FENCE_ZERO "/Script/Engine.StaticMesh'/Game/_Main/_FENCE_TILES/1_Plane_012.1_Plane_012'"
+
+#define SIZER FVector(3.f, 3.f, 3.f)
 
 AMyMap::AMyMap()
 {
@@ -49,7 +54,7 @@ void AMyMap::SpawnMap()
 	{
 		for (int j = 0; j < this->mapWidth; j++)
 		{
-			if (Map_Cells[i][j] == 0)
+			if (Map_Cells[i][j] == static_cast<int>(EMapEnum::Field) || Map_Cells[i][j] == static_cast<int>(EMapEnum::Nest) || Map_Cells[i][j] == static_cast<int>(EMapEnum::Spawner_one) || Map_Cells[i][j] == static_cast<int>(EMapEnum::Spawner_two))
 			{
 				FString AssetPathName;
 				// TODO: random seed
@@ -74,116 +79,313 @@ void AMyMap::SpawnMap()
 					AssetPathName = TEXT(GRASS_T1);
 					break;
 				}
-
-				/*int32 RandomRotatorNumber = FMath::RandRange(0, 3);
-				switch (RandomRotatorNumber)
-				{
-				case 0:
-					Rotator = FRotator(0, 0, 0);
-					break;
-				case 1:
-					Rotator = FRotator(0, 90.f, 0);
-					break;
-				case 2:
-					Rotator = FRotator(0, -90.f, 0);
-					break;
-				case 3:
-					Rotator = FRotator(0, -180.f, 0);
-					break;
-				default:
-					break;
-				}*/
-
 				FActorSpawnParameters SpawnParameters = FActorSpawnParameters();
 				SpawnParameters.Owner = this;
 
-				AMyTile* Tile = GetWorld()->SpawnActor<AMyTile>(AMyTile::StaticClass(), SpawnParameters);
-				UStaticMesh* Asset = Cast<UStaticMesh>(
+				AMyTile *Tile = GetWorld()->SpawnActor<AMyTile>(AMyTile::StaticClass(), SpawnParameters);
+				UStaticMesh *Asset = Cast<UStaticMesh>(
 					StaticLoadObject(UStaticMesh::StaticClass(), this, *AssetPathName));
 				Tiles_Cells[i].Add(Tile);
-				Tiles_Cells[i][j]->Mesh->SetStaticMesh(Asset);
-				Tiles_Cells[i][j]->Mesh->SetWorldScale3D(SIZER);
-				Tiles_Cells[i][j]->Mesh->SetWorldRotation(Rotator);
+				Tiles_Cells[i][j]->Mesh_L1->SetStaticMesh(Asset);
+				Tiles_Cells[i][j]->Mesh_L1->SetWorldScale3D(SIZER);
+				Tiles_Cells[i][j]->Mesh_L1->SetWorldRotation(Rotator);
 				Tiles_Cells[i][j]->SceneComponent->SetWorldLocation(FVector(
 					i * TILE_SIDE_LEN, j * TILE_SIDE_LEN, 0 * TILE_SIDE_LEN / 2));
 			}
-			if (Map_Cells[i][j] == 1)
+			if (Map_Cells[i][j] == static_cast<int>(EMapEnum::Path))
 			{
 				FString AssetPathName;
-				if (j > 0 && Map_Cells[i][j - 1] != 1 && i > 0 && Map_Cells[i - 1][j] != 1)
+				if (j > 0 && Map_Cells[i][j - 1] == 1 && i > 0 && Map_Cells[i - 1][j] == 1)
 				{
-					// turn ╚    ///  ╗╝╚╔
-					AssetPathName = TEXT(TURN_LU);
-				}
-				else if (j > 0 && Map_Cells[i][j - 1] != 1 && i < mapHeight && Map_Cells[i + 1][j] != 1)
-				{
-					// turn ╔    ///  ╗╝╚╔
-					AssetPathName = TEXT(TURN_UR);
-				}
-				else if (j < mapWidth && Map_Cells[i][j + 1] != 1 && i < mapHeight && Map_Cells[i + 1][j] != 1)
-				{
-					// turn ╗    ///  ╗╝╚╔
+					// turn ╗    ///  ╔╗╚╝
 					AssetPathName = TEXT(TURN_RD);
 				}
-				else if (j < mapWidth && Map_Cells[i][j + 1] != 1 && i > 0 && Map_Cells[i - 1][j] != 1)
+				else if (j > 0 && Map_Cells[i][j - 1] == 1 && i < mapHeight && Map_Cells[i + 1][j] == 1)
 				{
-					//  turn ╝    ///  ╗╝╚╔
+					// turn ╝    ///  ╔╗╚╝
 					AssetPathName = TEXT(TURN_DL);
 				}
-				else if ((j < mapWidth && Map_Cells[i][j + 1] != 1 && j > 0 && Map_Cells[i][j - 1] != 1) && (i <
-					mapHeight && Map_Cells[i + 1][j] == 1 || i == mapHeight) && (i > 0 && Map_Cells[i - 1][j] == 1 || i
-					== 0))
+				else if (j < mapWidth && Map_Cells[i][j + 1] == 1 && i < mapHeight && Map_Cells[i + 1][j] == 1)
+				{
+					// turn ╚    ///  ╔╗╚╝
+					AssetPathName = TEXT(TURN_LU);
+				}
+				else if (j < mapWidth && Map_Cells[i][j + 1] == 1 && i > 0 && Map_Cells[i - 1][j] == 1)
+				{
+					//  turn ╔    ///  ╔╗╚╝
+					AssetPathName = TEXT(TURN_UR);
+				}
+				else if ((j < mapWidth && Map_Cells[i][j + 1] != 1 && j > 0 && Map_Cells[i][j - 1] != 1) && (i < mapHeight && Map_Cells[i + 1][j] == 1 || i == mapHeight) && (i > 0 && Map_Cells[i - 1][j] == 1 || i == 0))
 				{
 					// straight ║   ///  ║═
 					AssetPathName = TEXT(STRAIGHT_VERT);
 				}
-				else if ((j < mapWidth && Map_Cells[i][j + 1] == 1 || j == mapWidth) && (j > 0 && Map_Cells[i][j - 1] ==
-					1 || j == 0) && (i < mapHeight && Map_Cells[i + 1][j] != 1 && i > 0 && Map_Cells[i - 1][j] != 1))
+				else if (
+					/*(j < mapWidth && Map_Cells[i][j + 1] == 1 || j == mapWidth) && (j > 0 && Map_Cells[i][j - 1] ==
+										1 || j == 0) && */
+					(i < mapHeight && Map_Cells[i + 1][j] != 1 && i > 0 &&
+					 Map_Cells[i - 1][j] != 1))
 				{
 					// straight ═   ///  ║═
 					AssetPathName = TEXT(STRAIGHT_HORIZ);
 				}
-				//AssetPathName = TEXT("/Script/Engine.StaticMesh'/Game/_Main/Voxels/path/path.path'");
+				// AssetPathName = TEXT("/Script/Engine.StaticMesh'/Game/_Main/Voxels/path/path.path'");
 				FActorSpawnParameters SpawnParameters = FActorSpawnParameters();
 				SpawnParameters.Owner = this;
 
-				AMyTile* Tile = GetWorld()->SpawnActor<AMyTile>(AMyTile::StaticClass(), SpawnParameters);
-				UStaticMesh* Asset = Cast<UStaticMesh>(
+				AMyTile *Tile = GetWorld()->SpawnActor<AMyTile>(AMyTile::StaticClass(), SpawnParameters);
+				UStaticMesh *Asset = Cast<UStaticMesh>(
 					StaticLoadObject(UStaticMesh::StaticClass(), this, *AssetPathName));
 				Tiles_Cells[i].Add(Tile);
-				Tiles_Cells[i][j]->Mesh->SetStaticMesh(Asset);
-				Tiles_Cells[i][j]->Mesh->SetWorldScale3D(SIZER);
+				Tiles_Cells[i][j]->Mesh_L1->SetStaticMesh(Asset);
+				Tiles_Cells[i][j]->Mesh_L1->SetWorldScale3D(SIZER);
 				Tiles_Cells[i][j]->SceneComponent->SetWorldLocation(FVector(
 					i * TILE_SIDE_LEN, j * TILE_SIDE_LEN, 0 * TILE_SIDE_LEN / 2));
 			}
-			if (Map_Cells[i][j] == -1)
+			if (Map_Cells[i][j] == static_cast<int>(EMapEnum::Obstacle))
 			{
-				FString AssetPathName =
-					TEXT("/Script/Engine.StaticMesh'/Game/_Main/Voxels/Obstacle/obstacle.obstacle'");
+				FString AssetPathName = TEXT(GRASS_T1);
 				FActorSpawnParameters SpawnParameters = FActorSpawnParameters();
 				SpawnParameters.Owner = this;
 
-				AMyTile* Tile = GetWorld()->SpawnActor<AMyTile>(AMyTile::StaticClass(), SpawnParameters);
-				UStaticMesh* Asset = Cast<UStaticMesh>(
+				AMyTile *Tile = GetWorld()->SpawnActor<AMyTile>(AMyTile::StaticClass(), SpawnParameters);
+				UStaticMesh *Asset = Cast<UStaticMesh>(
 					StaticLoadObject(UStaticMesh::StaticClass(), this, *AssetPathName));
 
 				Tiles_Cells[i].Add(Tile);
-				Tiles_Cells[i][j]->Mesh->SetStaticMesh(Asset);
-				Tiles_Cells[i][j]->Mesh->SetWorldScale3D(FVector(10.f / 32.f, 10.f / 32.f, 10.f / 32.f));
+				Tiles_Cells[i][j]->Mesh_L1->SetStaticMesh(Asset);
+				Tiles_Cells[i][j]->Mesh_L1->SetWorldScale3D(SIZER);
 				Tiles_Cells[i][j]->SceneComponent->SetWorldLocation(FVector(
-					i * TILE_SIDE_LEN - TILE_SIDE_LEN / 2, j * TILE_SIDE_LEN + TILE_SIDE_LEN / 2, -TILE_SIDE_LEN));
+					i * TILE_SIDE_LEN, j * TILE_SIDE_LEN, 0 * TILE_SIDE_LEN / 2));
+
+				FNeighborFences NeighborFences;
+
+				if (i == 0)
+				{
+					if (j == 0)
+					{
+						if (Map_Cells[i + 1][j] == -1)
+						{
+							NeighborFences.Up = true;
+						}
+						if (Map_Cells[i][j + 1] == -1)
+						{
+							NeighborFences.Right = true;
+						}
+					}
+					else if (j == mapWidth - 1)
+					{
+						if (Map_Cells[i + 1][j] == -1)
+						{
+							NeighborFences.Up = true;
+						}
+						if (Map_Cells[i][j - 1] == -1)
+						{
+							NeighborFences.Left = true;
+						}
+					}
+					else if (j > 0 && j < mapWidth - 1)
+					{
+						if (Map_Cells[i + 1][j] == -1)
+						{
+							NeighborFences.Up = true;
+						}
+						if (Map_Cells[i][j - 1] == -1)
+						{
+							NeighborFences.Left = true;
+						}
+						if (Map_Cells[i][j + 1] == -1)
+						{
+							NeighborFences.Right = true;
+						}
+					}
+				}
+				else if (i == mapHeight - 1)
+				{
+					if (j == 0)
+					{
+						if (Map_Cells[i - 1][j] == -1)
+						{
+							NeighborFences.Down = true;
+						}
+						if (Map_Cells[i][j + 1] == -1)
+						{
+							NeighborFences.Right = true;
+						}
+					}
+					else if (j == mapWidth - 1)
+					{
+						if (Map_Cells[i - 1][j] == -1)
+						{
+							NeighborFences.Down = true;
+						}
+						if (Map_Cells[i][j - 1] == -1)
+						{
+							NeighborFences.Left = true;
+						}
+					}
+					else if (j > 0 && j < mapWidth - 1)
+					{
+						if (Map_Cells[i - 1][j] == -1)
+						{
+							NeighborFences.Down = true;
+						}
+						if (Map_Cells[i][j - 1] == -1)
+						{
+							NeighborFences.Left = true;
+						}
+						if (Map_Cells[i][j + 1] == -1)
+						{
+							NeighborFences.Right = true;
+						}
+					}
+				}
+				else if (i > 0 && i < mapWidth - 1)
+				{
+					if (j == 0)
+					{
+						if (Map_Cells[i + 1][j] == -1)
+						{
+							NeighborFences.Up = true;
+						}
+						if (Map_Cells[i - 1][j] == -1)
+						{
+							NeighborFences.Down = true;
+						}
+						if (Map_Cells[i][j + 1] == -1)
+						{
+							NeighborFences.Right = true;
+						}
+					}
+					else if (j == mapWidth - 1)
+					{
+						if (Map_Cells[i + 1][j] == -1)
+						{
+							NeighborFences.Up = true;
+						}
+						if (Map_Cells[i - 1][j] == -1)
+						{
+							NeighborFences.Down = true;
+						}
+						if (Map_Cells[i][j - 1] == -1)
+						{
+							NeighborFences.Left = true;
+						}
+					}
+					else if (j > 0 && j < mapWidth - 1)
+					{
+						if (Map_Cells[i + 1][j] == -1)
+						{
+							NeighborFences.Up = true;
+						}
+						if (Map_Cells[i][j - 1] == -1)
+						{
+							NeighborFences.Left = true;
+						}
+						if (Map_Cells[i - 1][j] == -1)
+						{
+							NeighborFences.Down = true;
+						}
+						if (Map_Cells[i][j + 1] == -1)
+						{
+							NeighborFences.Right = true;
+						}
+					}
+				}
+				FString Fence_AssetPathName;
+				FRotator Fence_Rotator;
+				bool A = NeighborFences.Up;
+				bool B = NeighborFences.Down;
+				bool C = NeighborFences.Left;
+				bool D = NeighborFences.Right;
+				if (A && B && C && D || A && B && (!C != !D) || C && D && (A != B))
+				{
+					Fence_AssetPathName = TEXT(FENCE_ALLSIDE);
+				}
+				else
+				{
+					if (A && B)
+					{
+						Fence_AssetPathName = TEXT(FENCE_OPP);
+						Fence_Rotator = FRotator(0, 90, 0);
+					}
+					else if (C && D)
+					{
+						Fence_AssetPathName = TEXT(FENCE_OPP);
+						Fence_Rotator = FRotator(0, 0, 0);
+					}
+					else if (A && C)
+					{
+						Fence_AssetPathName = TEXT(FENCE_ANGULAR);
+						Fence_Rotator = FRotator(0, 90, 0);
+					}
+					else if (A && D)
+					{
+						Fence_AssetPathName = TEXT(FENCE_ANGULAR);
+						Fence_Rotator = FRotator(0, 180, 0);
+					}
+					else if (B && C)
+					{
+						Fence_AssetPathName = TEXT(FENCE_ANGULAR);
+						Fence_Rotator = FRotator(0, 0, 0);
+					}
+					else if (B && D)
+					{
+						Fence_AssetPathName = TEXT(FENCE_ANGULAR);
+						Fence_Rotator = FRotator(0, -90, 0);
+					}
+					else
+					{
+						if (A)
+						{
+							Fence_AssetPathName = TEXT(FENCE_SNGL);
+							Fence_Rotator = FRotator(0, 90, 0);
+						}
+						else if (B)
+						{
+							Fence_AssetPathName = TEXT(FENCE_SNGL);
+							Fence_Rotator = FRotator(0, -90, 0);
+						}
+						else if (C)
+						{
+							Fence_AssetPathName = TEXT(FENCE_SNGL);
+							Fence_Rotator = FRotator(0, 0, 0);
+						}
+						else if (D)
+						{
+							Fence_AssetPathName = TEXT(FENCE_SNGL);
+							Fence_Rotator = FRotator(0, 180, 0);
+						}
+						else
+						{
+							Fence_AssetPathName = TEXT(FENCE_ZERO);
+						}
+					}
+				}
+				FActorSpawnParameters SpawnParameters_ = FActorSpawnParameters();
+				SpawnParameters.Owner = this;
+
+				UStaticMesh *Asset_ = Cast<UStaticMesh>(
+					StaticLoadObject(UStaticMesh::StaticClass(), this, *Fence_AssetPathName));
+
+				Tiles_Cells[i][j]->Mesh_L2->SetStaticMesh(Asset_);
+				Tiles_Cells[i][j]->Mesh_L2->SetWorldScale3D(SIZER);
+				Tiles_Cells[i][j]->Mesh_L2->SetWorldRotation(Fence_Rotator);
+				Tiles_Cells[i][j]->Mesh_L2->SetWorldLocation(
+					Tiles_Cells[i][j]->SceneComponent->GetComponentLocation() + FVector(0, 0, 12));
 			}
 		}
 	}
+
 	/*bool a = GetWorld()->IsNavigationRebuilt();
 	GEngine->AddOnScreenDebugMessage(-1, 10.f, FColor::White, FString::Printf(TEXT("%i"), a));*/
-	UpdateNavMeshik();
+	//UpdateNavMeshik();
 }
 
 void AMyMap::UpdateNavMeshik()
 {
 	// Получаем ссылку на навигационную систему
-	UNavigationSystemV1* NavSystem = FNavigationSystem::GetCurrent<UNavigationSystemV1>(FAITestHelpers::GetWorld());
+	UNavigationSystemV1 *NavSystem = FNavigationSystem::GetCurrent<UNavigationSystemV1>(FAITestHelpers::GetWorld());
 	if (NavSystem)
 	{
 		NavSystem->MainNavData->RebuildAll();
@@ -198,8 +400,7 @@ void AMyMap::ConvertMapFromImage()
 	/// B -> some kind of bushes for obstacle	{-1}value
 	///
 
-
-	MAP_FILE_NAME = "X:/EpicGames_Unreal/pROJECTs/Game/Source/Game/Beta_map.bmp";
+	MAP_FILE_NAME = "X:/EpicGames_Unreal/pROJECTs/Oparush/OparushDefense/Source/Game/Beta_map.bmp";
 	bitmap_image Map(MAP_FILE_NAME);
 	if (!Map)
 	{
@@ -210,7 +411,7 @@ void AMyMap::ConvertMapFromImage()
 	this->mapHeight = Map.height();
 	this->mapWidth = Map.width();
 
-	Map_Cells = new int*[this->mapHeight];
+	Map_Cells = new int *[this->mapHeight];
 	for (int i = 0; i < this->mapHeight; i++)
 	{
 		Tiles_Cells.Add(FTiles2DArray());
@@ -224,30 +425,43 @@ void AMyMap::ConvertMapFromImage()
 			int B = Color.blue;
 			int G = Color.green;
 
-			if (R > 230 && G > 230)
+			if (R > 230 && G > 230 && B < 50)
 			{
 				StartCell.X_coord = j;
 				StartCell.Y_coord = i;
 			}
-			if (R > 230)
+
+			if (R > 230 && G > 230 && B > 230)
 			{
-				Map_Cells[i][j] = 1; /// RED		
+				Map_Cells[i][j] = static_cast<int>(EMapEnum::Spawner_two);
+			}
+			else if (R > 230 && G < 50 && B > 230)
+			{
+				Map_Cells[i][j] = static_cast<int>(EMapEnum::Spawner_one);
+			}
+			else if (R == 0 && G > 230 && B > 230)
+			{
+				Map_Cells[i][j] = static_cast<int>(EMapEnum::Nest);
+			}
+			else if (R > 230)
+			{
+				Map_Cells[i][j] = static_cast<int>(EMapEnum::Path); /// RED
 			}
 			else
 			{
 				if (G > 230)
 				{
-					Map_Cells[i][j] = 0; /// GREEN
+					Map_Cells[i][j] = static_cast<int>(EMapEnum::Field); /// GREEN
 				}
 				else
 				{
 					if (B > 230)
 					{
-						Map_Cells[i][j] = -1; /// BLUE
+						Map_Cells[i][j] = static_cast<int>(EMapEnum::Obstacle); /// BLUE
 					}
 					else
 					{
-						Map_Cells[i][j] = -2; /// error pixel
+						Map_Cells[i][j] = static_cast<int>(EMapEnum::Error); /// error pixel
 					}
 				}
 			}
@@ -257,7 +471,7 @@ void AMyMap::ConvertMapFromImage()
 
 void AMyMap::ProcessWaypoints()
 {
-	//Nodes_Pre = new ANodePoint[mapHeight*mapWidth];
+	// Nodes_Pre = new ANodePoint[mapHeight*mapWidth];
 	int k = 0;
 	int min_x_coord = 1000;
 	FVector Direction = FVector::ZeroVector;
@@ -300,7 +514,7 @@ void AMyMap::ProcessWaypoints()
 				FActorSpawnParameters SpawnParameters = FActorSpawnParameters();
 				SpawnParameters.Owner = this;
 
-				//ANodePoint* Point = GetWorld()->SpawnActor<ANodePoint>(ANodePoint::StaticClass(), SpawnParameters);
+				// ANodePoint* Point = GetWorld()->SpawnActor<ANodePoint>(ANodePoint::StaticClass(), SpawnParameters);
 
 				FCoords Point;
 				Nodes.Add(Point);
@@ -313,7 +527,6 @@ void AMyMap::ProcessWaypoints()
 				Direction = FVector::UpVector;
 				y--;
 
-
 				continue;
 			}
 
@@ -321,7 +534,6 @@ void AMyMap::ProcessWaypoints()
 			{
 				FActorSpawnParameters SpawnParameters = FActorSpawnParameters();
 				SpawnParameters.Owner = this;
-
 
 				FCoords Point;
 				Nodes.Add(Point);
@@ -341,16 +553,15 @@ void AMyMap::ProcessWaypoints()
 			FActorSpawnParameters SpawnParameters = FActorSpawnParameters();
 			SpawnParameters.Owner = this;
 
-
 			FCoords Point;
 			Nodes.Add(Point);
 			Nodes[Node_Index].X_coord = x;
 			Nodes[Node_Index].Y_coord = y;
 			Nodes[Node_Index].Index = Node_Index;
 			Node_Index++;
-			GEngine->AddOnScreenDebugMessage(-1, 15.f, FColor::Yellow,
-			                                 FString::Printf(
-				                                 TEXT("x: %i, y%i"), EndCell.X_coord, EndCell.Y_coord));
+			//GEngine->AddOnScreenDebugMessage(-1, 15.f, FColor::Yellow,
+											//  FString::Printf(
+											// 	 TEXT("x: %i, y%i"), EndCell.X_coord, EndCell.Y_coord));
 			break;
 		}
 
@@ -376,7 +587,6 @@ void AMyMap::ProcessWaypoints()
 				Direction = FVector::UpVector;
 				y--;
 
-
 				continue;
 			}
 
@@ -410,9 +620,9 @@ void AMyMap::ProcessWaypoints()
 			Nodes[Node_Index].Index = Node_Index;
 			Node_Index++;
 
-			GEngine->AddOnScreenDebugMessage(-1, 15.f, FColor::Blue,
-			                                 FString::Printf(
-				                                 TEXT("x: %i, y%i"), EndCell.X_coord, EndCell.Y_coord));
+			// GEngine->AddOnScreenDebugMessage(-1, 15.f, FColor::Blue,
+			// 								 FString::Printf(
+			// 									 TEXT("x: %i, y%i"), EndCell.X_coord, EndCell.Y_coord));
 			break;
 		}
 
@@ -468,9 +678,9 @@ void AMyMap::ProcessWaypoints()
 			Nodes[Node_Index].Y_coord = y;
 			Nodes[Node_Index].Index = Node_Index;
 			Node_Index++;
-			GEngine->AddOnScreenDebugMessage(-1, 15.f, FColor::Red,
-			                                 FString::Printf(
-				                                 TEXT("x: %i, y%i"), EndCell.X_coord, EndCell.Y_coord));
+			// GEngine->AddOnScreenDebugMessage(-1, 15.f, FColor::Red,
+			// 								 FString::Printf(
+			// 									 TEXT("x: %i, y%i"), EndCell.X_coord, EndCell.Y_coord));
 			break;
 		}
 		if (Direction == FVector::DownVector)
@@ -526,16 +736,15 @@ void AMyMap::ProcessWaypoints()
 			Nodes[Node_Index].Index = Node_Index;
 			Node_Index++;
 
-			GEngine->AddOnScreenDebugMessage(-1, 15.f, FColor::White,
-			                                 FString::Printf(
-				                                 TEXT("x: %i, y%i"), EndCell.X_coord, EndCell.Y_coord));
+			// GEngine->AddOnScreenDebugMessage(-1, 15.f, FColor::White,
+			// 								 FString::Printf(
+			// 									 TEXT("x: %i, y%i"), EndCell.X_coord, EndCell.Y_coord));
 			break;
 		}
 		break;
 	}
 	Nodes_Num = Node_Index + 1;
 }
-
 
 void AMyMap::SpawnWaypoints()
 {
@@ -544,14 +753,13 @@ void AMyMap::SpawnWaypoints()
 		FActorSpawnParameters SpawnParameters = FActorSpawnParameters();
 		SpawnParameters.Owner = this;
 
-		AWaypoint* Waypoint = GetWorld()->SpawnActor<AWaypoint>(
+		AWaypoint *Waypoint = GetWorld()->SpawnActor<AWaypoint>(
 			FVector(), FRotator(), SpawnParameters);
 		Waypoint->SetActorLocation(FVector(Node.X_coord * TILE_SIDE_LEN, Node.Y_coord * TILE_SIDE_LEN, 250));
 		Waypoint->SetWaypoinOrder(Node.Index);
 		Waypoint->GetStaticMeshComponent()->SetMobility(EComponentMobility::Movable);
 	}
 }
-
 
 void AMyMap::MapChange(const int i, const int j, std::string action)
 {
@@ -560,25 +768,25 @@ void AMyMap::MapChange(const int i, const int j, std::string action)
 		this->Map_Cells[i][j] = 2;
 
 		FString AssetPathName = TEXT(PLACED);
-		UStaticMesh* Asset = Cast<UStaticMesh>(StaticLoadObject(UStaticMesh::StaticClass(), this, *AssetPathName));
+		UStaticMesh *Asset = Cast<UStaticMesh>(StaticLoadObject(UStaticMesh::StaticClass(), this, *AssetPathName));
 
-		//Tiles_Cells[i].Add(Tile);
+		// Tiles_Cells[i].Add(Tile);
 
-		//Tiles_Cells[i][j]->Mesh->SetStaticMesh(Asset);
-		//Tiles_Cells[i][j]->Mesh->SetWorldScale3D(SIZER);
-		//Tiles_Cells[i][j]->SceneComponent->SetWorldLocation(FVector( i * TILE_SIDE_LEN, j * TILE_SIDE_LEN, -200));
+		// Tiles_Cells[i][j]->Mesh->SetStaticMesh(Asset);
+		// Tiles_Cells[i][j]->Mesh->SetWorldScale3D(SIZER);
+		// Tiles_Cells[i][j]->SceneComponent->SetWorldLocation(FVector( i * TILE_SIDE_LEN, j * TILE_SIDE_LEN, -200));
 	}
 	if (action == "DESTROYED")
 	{
 		this->Map_Cells[i][j] = 0;
 
 		FString AssetPathName = TEXT(GRASS_T1);
-		UStaticMesh* Asset = Cast<UStaticMesh>(StaticLoadObject(UStaticMesh::StaticClass(), this, *AssetPathName));
+		UStaticMesh *Asset = Cast<UStaticMesh>(StaticLoadObject(UStaticMesh::StaticClass(), this, *AssetPathName));
 
-		//Tiles_Cells[i].Add(Tile);
+		// Tiles_Cells[i].Add(Tile);
 
-		//Tiles_Cells[i][j]->Mesh->SetStaticMesh(Asset);
-		//Tiles_Cells[i][j]->Mesh->SetWorldScale3D(SIZER);
+		// Tiles_Cells[i][j]->Mesh->SetStaticMesh(Asset);
+		// Tiles_Cells[i][j]->Mesh->SetWorldScale3D(SIZER);
 	}
 }
 

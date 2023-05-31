@@ -1,0 +1,12 @@
+.git
+.idea
+.vs
+.vscode
+cmake-build-debug
+Content
+DerivedDataCache
+Intermediate
+out
+Pixel Grid Base
+Platforms
+Saved

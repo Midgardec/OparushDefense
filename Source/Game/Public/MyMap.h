@@ -7,21 +7,21 @@
 #include "GameFramework/Actor.h"
 #include "MyMap.generated.h"
 
-
-
 USTRUCT()
-struct FTiles2DArray{
+struct FTiles2DArray
+{
 	GENERATED_BODY()
 public:
-
 	// ReSharper disable once CppUE4ProbableMemoryIssuesWithUObjectsInContainer
-	TArray<AMyTile*> Ar;
+	TArray<AMyTile *> Ar;
 
-	AMyTile* operator[] (int32 i) {
+	AMyTile *operator[](int32 i)
+	{
 		return Ar[i];
 	}
 
-	void Add(AMyTile* tile) {
+	void Add(AMyTile *tile)
+	{
 		Ar.Add(tile);
 	}
 };
@@ -36,12 +36,35 @@ public:
 	int Index;
 };
 
+USTRUCT()
+struct FNeighborFences
+{
+	GENERATED_BODY()
+	bool Up = false;
+	bool Down = false;
+	bool Left = false;
+	bool Right = false;
+};
+
+UENUM()
+enum class EMapEnum : int32
+{
+	Path = 1,
+	Nest = 3,
+	Spawner_one = 4,
+	Spawner_two = 5,
+	Occupied_Field = 2,
+	Field = 0,
+	Obstacle = -1,
+	Error = -2,
+
+};
 UCLASS()
 class GAME_API AMyMap : public AActor
 {
 	GENERATED_BODY()
-	
-public:	
+
+public:
 	// Sets default values for this actor's properties
 	AMyMap();
 	UFUNCTION(BlueprintCallable, Category = "Tiles|Size")
@@ -61,7 +84,7 @@ protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
-public:	
+public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
@@ -78,22 +101,24 @@ public:
 	 *  [][] ==  2   =>  tile for "tower already placed"	/ not for placement
 	 *  [][] ==  0   =>  tile for "tower to place"			/ for placement ☺
 	 */
-	int ** Map_Cells;
-	const char * MAP_FILE_NAME ;
-	//AMyTile * Tile; 
-	
+	int **Map_Cells;
+	const char *MAP_FILE_NAME;
+	// AMyTile * Tile;
+
 	UPROPERTY(EditAnywhere)
 	TArray<FTiles2DArray> Tiles_Cells;
+
+	UPROPERTY(EditAnywhere)
+	TArray<FTiles2DArray> Tiles_Cells_L2;
 	int TILE_SIDE_LEN;
 	UPROPERTY(EditAnywhere)
-	class UInstancedStaticMeshComponent* Tiles;
-	
-	
+	class UInstancedStaticMeshComponent *Tiles;
+
 	UPROPERTY(EditAnywhere)
 	// ReSharper disable once UnrealHeaderToolError
-	TArray<FCoords> Nodes ;
+	TArray<FCoords> Nodes;
 	UPROPERTY(EditAnywhere)
-	TArray<ANodePoint*> Nodes_Pre;
+	TArray<ANodePoint *> Nodes_Pre;
 
 	UPROPERTY(EditAnywhere)
 	FCoords StartCell;

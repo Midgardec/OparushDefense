@@ -5,10 +5,14 @@
 #include "CoreMinimal.h"
 #include "EnemyAIController.h"
 #include "MyCharacter.h"
+#include "Math/RandomStream.h"
+#include "CoinBase.h"
+#include "TimerManager.h"
+#include "Engine/World.h"
+#include "PaperFlipbookComponent.h"
 #include "PaperSpriteComponent.h"
 #include "GameFramework/Pawn.h"
 #include "EnemyBase.generated.h"
-
 
 UCLASS()
 class GAME_API AEnemyBase : public ACharacter
@@ -25,69 +29,87 @@ protected:
 	void ChangeSprite(EDirection NewDirection);
 	UFUNCTION()
 	void OnAnyDamage(
-		AActor* DamagedActor,
+		AActor *DamagedActor,
 		float Damage,
-		const UDamageType* DamageType,
-		AController* InstigatedBy,
-		AActor* DamageCauser
-	);
+		const UDamageType *DamageType,
+		AController *InstigatedBy,
+		AActor *DamageCauser);
 	void MoveBetweenPoints(float DeltaTime);
+
+
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Enemy|Hp")
+	float Health;
+
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Enemy|MaxHp")
+	float MaxHealth;
+
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Enemy|Reward")
+	float Reward;
 
 public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
 	// Called to bind functionality to input
-	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
+	virtual void SetupPlayerInputComponent(class UInputComponent *PlayerInputComponent) override;
 
 	void MoveToWaypoint();
-	AMyCharacter* GetPlayer() const;
-	auto Place() -> AEnemyBase*;
+	AMyCharacter *GetPlayer() const;
+	auto Place() -> AEnemyBase *;
 
 	UPROPERTY()
-	AMyCharacter* MyCharacter;
+	AMyCharacter *MyCharacter;
 
 	UPROPERTY(EditAnywhere, Category = "Movement")
 	float MoveSpeed = 500.f;
 	bool canMove;
+	bool isDead = false;
 	bool Moving = false;
+	bool isDamaging = false;
+	bool CoinsSpawned = false;
 
+	FTimerHandle TimerHandler;
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Enemy|Damage|Delay")
+	float DamageDelay = 1.f;
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Enemy|Damage|DamageAmount")
+	float DamageAmount = 10.f;
+	UFUNCTION(BlueprintCallable)
+	void DamageCastle();
+
+	float timer_ = 0.0f;
 
 	UPROPERTY(BlueprintReadWrite, VisibleAnywhere, meta = (AllowPrivateAccess = "true"))
 	int CurrentCheckPoint = 0;
 
 	UPROPERTY(BlueprintReadWrite, VisibleAnywhere, meta = (AllowPrivateAccess = "true"))
-	AMyMap* Map;
+	AMyMap *Map;
 
 	int TILE_SIDE_LEN = 200;
 
-
 	UPROPERTY()
-	AEnemyAIController* EnemyAIController;
-
+	AEnemyAIController *EnemyAIController;
 
 	// Переменная для хранения текущего направления спрайта
 	EDirection CurrentDirection = EDirection::Right;
 
 	// Задаем список спрайтов для каждого направления
 	UPROPERTY(EditAnywhere, Category = "Sprite")
-	TMap<EDirection, UPaperSprite*> Sprites;
+	TMap<EDirection, UPaperFlipbook *> Sprites;
 
 	// Компонент спрайта
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Sprite", meta = (AllowPrivateAccess = "true"))
-	UPaperSpriteComponent* SpriteComponent;
+	UPaperFlipbookComponent *SpriteComponent;
 
 	// Используемый спрайт
-	UPROPERTY(BlueprintReadWrite, Category = "Sprite", meta = (AllowPrivateAccess = "true"))
-	UPaperSprite* CurrentSprite;
+	UPROPERTY(BlueprintReadWrite, Category = "Flipbook", meta = (AllowPrivateAccess = "true"))
+	UPaperFlipbook *CurrentSprite;
 
 	// SphereColision
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, meta = (AllowPrivateAccess = "true"))
-	USphereComponent* SphereCollision;
-	
+	USphereComponent *SphereCollision;
 
 	UFUNCTION(BlueprintCallable)
-	void SetHealth(float Amount);
+	void AddDamage(float Damage);
 
 	UFUNCTION(BlueprintCallable)
 	float GetHealth();
@@ -97,29 +119,39 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 	void SetMaxHealth(float Amount);
-	
+
+	UFUNCTION(BlueprintCallable)
+	void SetReward(float Amount);
+
 	UFUNCTION(BlueprintCallable)
 	float GetReward();
+
+	UFUNCTION(BlueprintCallable)
+	void SpawnCoins();
+
+	TSubclassOf<class ACoinBase> CoinClass;
+	
+
+
+
+
 private:
+	UFUNCTION(BlueprintCallable)
+	void SetHealth(float Amount);
+
+	UFUNCTION()
+	void Die(float TimeBeforeDie);
+
 	FVector TargetLocation;
 
 	UPROPERTY(BlueprintReadWrite, VisibleAnywhere, meta = (AllowPrivateAccess = "true"))
-	USceneComponent* SceneComponent;
-
-
-	UPROPERTY(BlueprintReadWrite, VisibleAnywhere, meta = (AllowPrivateAccess = "true"))
-	UStaticMeshComponent* MeshComponent;
-
+	USceneComponent *SceneComponent;
 
 	UPROPERTY(BlueprintReadWrite, VisibleAnywhere, meta = (AllowPrivateAccess = "true"))
-	TArray<AActor*> Waypoints;
+	UStaticMeshComponent *MeshComponent;
 
 	UPROPERTY(BlueprintReadWrite, VisibleAnywhere, meta = (AllowPrivateAccess = "true"))
-	float Health;
+	TArray<AActor *> Waypoints;
 
-	UPROPERTY(BlueprintReadWrite, VisibleAnywhere, meta = (AllowPrivateAccess = "true"))
-	float MaxHealth;
-
-	UPROPERTY(BlueprintReadWrite, VisibleAnywhere, meta = (AllowPrivateAccess = "true"))
-	float Reward;
+	
 };

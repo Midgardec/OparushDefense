@@ -1,0 +1,21 @@
+{
+	"folders": [
+		{
+			"name": "Game",
+			"path": "."
+		},
+		{
+			"name": "UE5",
+			"path": "X:\\EpicGames_Unreal\\UE_5.1"
+		}
+	],
+	"settings": {
+		"typescript.tsc.autoDetect": "off"
+	},
+	"extensions": {
+		"recommendations": [
+			"ms-vscode.cpptools",
+			"ms-dotnettools.csharp"
+		]
+	}
+}

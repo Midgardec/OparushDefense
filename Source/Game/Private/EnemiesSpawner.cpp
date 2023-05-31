@@ -21,14 +21,14 @@ void AEnemiesSpawner::BeginPlay()
 {
 	Super::BeginPlay();
 	Player = GetPlayer();
-	StartWave();
+	//StartWave();
 }
 void AEnemiesSpawner::StartWave()
 {
-	
-	WaveIndex=5;
-	SpawnDelay = 2.f;
-	
+	GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Red,FString::Printf(TEXT("Started Wave")));
+	WaveIndex *= 5;
+	SpawnDelay = 1.f;
+	EnemyPerWaveCounter = 0;
 	GetWorldTimerManager().SetTimer(TimerHandler, this, &AEnemiesSpawner::SpawnEnemies, SpawnDelay, true);
 }
 
@@ -42,14 +42,18 @@ void AEnemiesSpawner::SpawnEnemies()
 	else
 	{
 		GetWorldTimerManager().ClearTimer(TimerHandler);
+		Player->SetReady(false);
+		Player->bCanChangeWave = true;
+		Player->CanStartNextWave(true);
+		//Player->WaveIndex ++;
 	}
 }
 
 void AEnemiesSpawner::SpawnEnemy(UClass* EnemyClassToSpawn)
 {
 	FActorSpawnParameters SpawnParameters = FActorSpawnParameters();
-	GetWorld()->SpawnActor<AEnemyBase>(EnemyClassToSpawn, SpawnParameters);
-	
+	AEnemyBase *f = GetWorld()->SpawnActor<AEnemyBase>(EnemyClassToSpawn, SpawnParameters);
+	f->SetReward(30.f);
 }
 
 // Called every frame
@@ -60,8 +64,11 @@ void AEnemiesSpawner::Tick(float DeltaTime)
 	{
 		if(Player->bReadyForWave)
 		{
+			WaveIndex = Player->WaveIndex;
 			StartWave();
-			Player->bReadyForWave = false;
+			Player->SetReady(false);
+			Player->bWaveStart = true;
+			Player->CanStartNextWave( false);
 		}
 	}else
 	{

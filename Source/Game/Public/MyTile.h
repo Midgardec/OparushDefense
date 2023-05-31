@@ -28,5 +28,8 @@ public:
 	USceneComponent* SceneComponent;
 
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, meta = (AllowPrivateAccess = "true"))
-	UStaticMeshComponent* Mesh;
+	UStaticMeshComponent* Mesh_L1;
+
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, meta = (AllowPrivateAccess = "true"))
+	UStaticMeshComponent* Mesh_L2;
 };

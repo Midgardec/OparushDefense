@@ -11,8 +11,11 @@ AMyTile::AMyTile()
 
 	SceneComponent = CreateDefaultSubobject<USceneComponent>(TEXT("SceneComponent"));
 	RootComponent = SceneComponent;
-	Mesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("GhostMesh0"));
-	Mesh->SetupAttachment(RootComponent);
+	Mesh_L1 = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("GhostMesh0"));
+	Mesh_L1->SetupAttachment(RootComponent);
+
+	Mesh_L2 = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("GhostMesh1"));
+	Mesh_L2->SetupAttachment(RootComponent);
 }
 
 // Called when the game starts or when spawned

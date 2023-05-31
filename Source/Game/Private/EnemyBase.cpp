@@ -1,13 +1,12 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
-
 #include "EnemyBase.h"
 
 #include "EnemyAIController.h"
 #include "PaperSprite.h"
+#include "PaperFlipbook.h"
 #include "Kismet/GameplayStatics.h"
 #include "Kismet/KismetMathLibrary.h"
-
 
 #define SPEED 200.f
 // Sets default values
@@ -15,38 +14,38 @@ AEnemyBase::AEnemyBase()
 {
 	/*
 	 *TODO: create sprites and uncomment this section*/
-	UPaperSprite* UpSprite = LoadObject<UPaperSprite>(
+	UPaperFlipbook *UpSprite = LoadObject<UPaperFlipbook>(
 		nullptr, TEXT(
-			"/Script/Paper2D.PaperSprite'/Game/_Main/Sprites/Enemies/sprite_sheet_Sprite_77.sprite_sheet_Sprite_77'"));
-	UPaperSprite* DownSprite = LoadObject<UPaperSprite>(
-		nullptr,TEXT(
-			"/Script/Paper2D.PaperSprite'/Game/_Main/Sprites/Enemies/sprite_sheet_Sprite_78.sprite_sheet_Sprite_78'"));
-	UPaperSprite* LeftSprite = LoadObject<UPaperSprite>(
-		nullptr,TEXT(
-			"/Script/Paper2D.PaperSprite'/Game/_Main/Sprites/Enemies/sprite_sheet_Sprite_76.sprite_sheet_Sprite_76'"));
-	UPaperSprite* RightSprite = LoadObject<UPaperSprite>(
-		nullptr,TEXT(
-			"/Script/Paper2D.PaperSprite'/Game/_Main/Sprites/Enemies/sprite_sheet_Sprite_75.sprite_sheet_Sprite_75'"));
-
+					 "/Script/Paper2D.PaperFlipbook'/Game/_Main/Sprites/Enemies/Left.Left'"));
+	UPaperFlipbook *DownSprite = LoadObject<UPaperFlipbook>(
+		nullptr, TEXT(
+					 "/Script/Paper2D.PaperFlipbook'/Game/_Main/Sprites/Enemies/Right.Right'"));
+	UPaperFlipbook *LeftSprite = LoadObject<UPaperFlipbook>(
+		nullptr, TEXT(
+					 "/Script/Paper2D.PaperFlipbook'/Game/_Main/Sprites/Enemies/Front.Front'"));
+	UPaperFlipbook *RightSprite = LoadObject<UPaperFlipbook>(
+		nullptr, TEXT(
+					 "/Script/Paper2D.PaperFlipbook'/Game/_Main/Sprites/Enemies/Back.Back'"));
 
 	Sprites.Add(EDirection::Up, UpSprite);
 	Sprites.Add(EDirection::Down, DownSprite);
 	Sprites.Add(EDirection::Left, LeftSprite);
 	Sprites.Add(EDirection::Right, RightSprite);
 
-
 	PrimaryActorTick.bCanEverTick = true;
 	MeshComponent = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("MeshComponent"));
 	RootComponent = MeshComponent;
 
 	// Создаем компонент спрайта
-	SpriteComponent = CreateDefaultSubobject<UPaperSpriteComponent>(TEXT("SpriteComponent"));
+	SpriteComponent = CreateDefaultSubobject<UPaperFlipbookComponent>(TEXT("SpriteComponent"));
 	SpriteComponent->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 	SpriteComponent->SetupAttachment(RootComponent);
 	SpriteComponent->SetGenerateOverlapEvents(false);
+	SpriteComponent->SetRelativeLocation(FVector(0,0,-190.f));
+	SpriteComponent->SetCastShadow(true);
 
 	SphereCollision = CreateDefaultSubobject<USphereComponent>(TEXT("SphereCollision"));
-	SphereCollision->SetSphereRadius(100.f); // задаем радиус сферы
+	SphereCollision->SetSphereRadius(100.f);						  // задаем радиус сферы
 	SphereCollision->SetCollisionProfileName(TEXT("EnemyCollision")); // задаем профиль коллизии для сферы
 	SphereCollision->SetupAttachment(RootComponent);
 }
@@ -59,9 +58,7 @@ void AEnemyBase::BeginPlay()
 	// take damage
 	OnTakeAnyDamage.AddDynamic(this, &AEnemyBase::OnAnyDamage);
 
-
 	EnemyAIController = Cast<AEnemyAIController>(GetController());
-
 
 	const FVector MapLocation(0.0f, 0.0f, 0.0f);
 	const FRotator MapRotation(0.0f, 0.0f, 0.0f);
@@ -71,14 +68,13 @@ void AEnemyBase::BeginPlay()
 	Map->ProcessWaypoints();
 
 	this->SetActorLocation(FVector(Map->StartCell.Y_coord * TILE_SIDE_LEN, Map->StartCell.X_coord * TILE_SIDE_LEN,
-	                               TILE_SIDE_LEN));
+								   TILE_SIDE_LEN));
 
 	// Устанавливаем начальный спрайт
 	CurrentSprite = Sprites[EDirection::Right];
-	SpriteComponent->SetRelativeRotation(FRotator(90.0f, 90.f, 0.0f));
-	SpriteComponent->SetSprite(CurrentSprite);
-	SpriteComponent->SetWorldScale3D(FVector(10.0f, 10.0f, 10.0f));
-
+	SpriteComponent->SetRelativeRotation(FRotator(0.0f, 90.f, 0.0f));
+	SpriteComponent->SetFlipbook(CurrentSprite);
+	SpriteComponent->SetWorldScale3D(FVector(5.0f, 5.0f, 5.0f));
 
 	CurrentCheckPoint = 0;
 	canMove = true;
@@ -93,13 +89,13 @@ void AEnemyBase::ChangeSprite(EDirection NewDirection)
 	CurrentDirection = NewDirection;
 
 	// Получаем спрайт для нового направления из списка
-	UPaperSprite* NewSprite = Sprites.FindRef(NewDirection);
+	UPaperFlipbook *NewSprite = Sprites.FindRef(NewDirection);
 
 	// Если спрайт найден, то меняем его
 	if (NewSprite != nullptr)
 	{
 		// Заменяем текущий спрайт на новый
-		SpriteComponent->SetSprite(NewSprite);
+		SpriteComponent->SetFlipbook(NewSprite);
 	}
 	// Иначе выводим ошибку в лог
 	else
@@ -108,12 +104,13 @@ void AEnemyBase::ChangeSprite(EDirection NewDirection)
 	}
 }
 
-void AEnemyBase::OnAnyDamage(AActor* DamagedActor, float Damage, const UDamageType* DamageType,
-                             AController* InstigatedBy, AActor* DamageCauser)
+void AEnemyBase::OnAnyDamage(AActor *DamagedActor, float Damage, const UDamageType *DamageType,
+							 AController *InstigatedBy, AActor *DamageCauser)
 {
 	if (DamagedActor == this)
 	{
-		this->SetHealth(GetHealth()-Damage);
+		this->AddDamage(Damage);
+		// this->SetHealth(GetHealth()-Damage);
 		UE_LOG(LogTemp, Warning, TEXT("Damage received: %f"), Damage);
 	}
 }
@@ -123,7 +120,7 @@ void AEnemyBase::MoveBetweenPoints(float DeltaTime)
 	if (canMove && CurrentCheckPoint < Map->Nodes.Num())
 	{
 		const FVector NextLocation = FVector(Map->Nodes[CurrentCheckPoint].Y_coord * TILE_SIDE_LEN,
-		                                     Map->Nodes[CurrentCheckPoint].X_coord * TILE_SIDE_LEN, TILE_SIDE_LEN);
+											 Map->Nodes[CurrentCheckPoint].X_coord * TILE_SIDE_LEN, TILE_SIDE_LEN);
 
 		const float DistanceToTarget = FVector::Distance(NextLocation, GetActorLocation());
 
@@ -131,8 +128,8 @@ void AEnemyBase::MoveBetweenPoints(float DeltaTime)
 		{
 			const FVector Direction = (NextLocation - GetActorLocation()).GetSafeNormal();
 			SetActorLocation(GetActorLocation() + Direction * MoveSpeed * DeltaTime);
-
-			// Определяем новое направление спрайта в зависимости от направления движения
+			// GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Red, FString::Printf(TEXT("point number %i"), CurrentCheckPoint));
+			//  Определяем новое направление спрайта в зависимости от направления движения
 			EDirection NewDirection;
 			if (FMath::Abs(Direction.X) > FMath::Abs(Direction.Y))
 			{
@@ -158,29 +155,46 @@ void AEnemyBase::MoveBetweenPoints(float DeltaTime)
 	{
 		canMove = false;
 	}
+	if (!this->isDead)
+		if (CurrentCheckPoint >= Map->Nodes.Num())
+		{
+			isDamaging = true;
+			// GetWorld()->GetTimerManager().SetTimer(TimerHandler, this, &AEnemyBase::DamageCastle, DamageDelay, true, 0.2f);
+		}
 }
 
+void AEnemyBase::DamageCastle()
+{
+	GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::White, FString::Printf(TEXT("DAMAGING")));
+	GetPlayer()->ApplyDamageOnCastle(DamageAmount);
+}
 // Called every frame
 void AEnemyBase::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 	/// check if alive
-	if(GetHealth()<0)
+	/*if(GetHealth()<0)
 	{
 		Destroy();
 		return;
+	}*/
+
+	if(isDamaging){
+		timer_ += DeltaTime;
+		if(timer_ >= DamageDelay){
+			timer_ = 0;
+			DamageCastle();
+		}
 	}
 
-	
 	MoveBetweenPoints(DeltaTime);
 }
 
 // Called to bind functionality to input
-void AEnemyBase::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
+void AEnemyBase::SetupPlayerInputComponent(UInputComponent *PlayerInputComponent)
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
 }
-
 
 void AEnemyBase::MoveToWaypoint()
 {
@@ -188,9 +202,9 @@ void AEnemyBase::MoveToWaypoint()
 
 	if (canMove && EnemyAIController && CurrentCheckPoint < Map->Nodes.Num())
 	{
-		GEngine->AddOnScreenDebugMessage(-1, 10.f, FColor::Emerald, FString::Printf(TEXT("Moving? %i"), Moving));
+		// GEngine->AddOnScreenDebugMessage(-1, 10.f, FColor::Emerald, FString::Printf(TEXT("Moving? %i"), Moving));
 		const FVector NextLocation = FVector(Map->Nodes[CurrentCheckPoint].Y_coord * TILE_SIDE_LEN,
-		                                     Map->Nodes[CurrentCheckPoint].X_coord * TILE_SIDE_LEN, TILE_SIDE_LEN);
+											 Map->Nodes[CurrentCheckPoint].X_coord * TILE_SIDE_LEN, TILE_SIDE_LEN);
 		TargetLocation = NextLocation;
 		EnemyAIController->MoveToLocation(NextLocation, 5.f, false);
 
@@ -202,11 +216,11 @@ void AEnemyBase::MoveToWaypoint()
 	}
 }
 
-AMyCharacter* AEnemyBase::GetPlayer() const
+AMyCharacter *AEnemyBase::GetPlayer() const
 {
 	if (GetWorld())
 	{
-		AMyCharacter* Mallet = Cast<AMyCharacter>(UGameplayStatics::GetPlayerPawn(GetWorld(), 0));
+		AMyCharacter *Mallet = Cast<AMyCharacter>(UGameplayStatics::GetPlayerPawn(GetWorld(), 0));
 		if (!Mallet)
 		{
 			return nullptr;
@@ -217,8 +231,68 @@ AMyCharacter* AEnemyBase::GetPlayer() const
 	return nullptr;
 }
 
+void AEnemyBase::Die(float TimeBeforeDie)
+{
+	// death logic
+	canMove = false;
+	isDead = true;
+	isDamaging = false;
+	Map->Destroy();
 
-auto AEnemyBase::Place() -> AEnemyBase*
+	SpawnCoins();
+	// death timer
+
+	GEngine->AddOnScreenDebugMessage(-1, 15.f, FColor::White, FString::Printf(TEXT("dieing")));
+	SetLifeSpan(TimeBeforeDie);
+}
+
+void AEnemyBase::SpawnCoins()
+{
+
+	if(CoinsSpawned){
+		return;
+	}
+	CoinsSpawned = true;
+	int coinsize = 10;
+	int amount = this->GetReward() / coinsize;
+
+	FRandomStream RandomStream(GetUniqueID());
+
+	float Length = FMath::RandRange(20.f, 50.f);
+
+	for (int i = 0; i < amount; i++)
+	{
+		FActorSpawnParameters SpawnParams;
+		SpawnParams.Owner = this;
+		SpawnParams.Instigator = GetInstigator();
+
+		CoinClass = ACoinBase::StaticClass();
+		ACoinBase *Coin = GetWorld()->SpawnActor<ACoinBase>(CoinClass, GetActorLocation(), GetActorRotation(), SpawnParams);
+
+		float Speed = 250.f;
+		Coin->SetSpeed(Speed);
+		if (Coin)
+		{
+
+			// Set the projectile's initial trajectory.
+			FVector LaunchDirection; // = (FMath::Rand()).GetSafeNormal();
+
+			float RandomX = FMath::RandRange(-1.0f, 1.0f);
+			float RandomY = FMath::RandRange(-1.0f, 1.0f);
+			float RandomZ = FMath::RandRange(0.5f, 1.0f);
+			LaunchDirection = FVector(RandomX, RandomY, RandomZ);
+			LaunchDirection *= Length;
+			Coin->SetVelocity(LaunchDirection);
+		}
+	}
+	
+}
+
+void AEnemyBase::SetReward(float Amount)
+{
+	Reward = Amount;
+}
+auto AEnemyBase::Place() -> AEnemyBase *
 {
 	if (GetWorld())
 	{
@@ -230,10 +304,19 @@ auto AEnemyBase::Place() -> AEnemyBase*
 	return nullptr;
 }
 
+void AEnemyBase::AddDamage(float Damage)
+{
+	this->SetHealth(this->GetHealth() - Damage);
+	if (Health <= 0)
+	{
+		this->Die(1);
+	}
+}
+
 void AEnemyBase::SetHealth(float Amount)
 {
 	Health = Amount;
-	FMath::Clamp(Health, 0 , GetMaxHealth());
+	FMath::Clamp(Health, 0, GetMaxHealth());
 }
 
 float AEnemyBase::GetHealth()

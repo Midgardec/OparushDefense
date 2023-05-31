@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Pawn.h"
+#include "ProjectileBase.h"
 #include "Components/SphereComponent.h"
 #include "TargetTester.h"
 #include "Tower.generated.h"
@@ -35,6 +36,7 @@ public:
 	float GetTowerLevel() const;
 
 	
+
 	float GetHealth() const;
 	void SetHealth(float Input);
 	
@@ -51,7 +53,7 @@ protected:
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Tower|HP")
 	float HealthPoints = 10.0f;
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Tower|Cost")
-	float PlacingCost = 10.0f;
+	float PlacingCost = 80.0f;
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Tower|Level")
 	float TowerLevel = 1.0f;
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Tower|Damage")
@@ -62,7 +64,23 @@ protected:
 	float BuyRange = 200.f;
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Tower|Delay")
 	double BlastDelay = 1.f;
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Tower|BlastCounter")
+	int BlastCounter = 1;
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Tower|Max Blasts")
+	int BlastCounterMax = 10;
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Tower|Bullet speed")
+	float BulletSpeed = 1000.f;
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Tower|Bullet Type")
+	EType BulletType = EType::AutoTarget;
+	UPROPERTY()
+	int posX;
+	UPROPERTY()
+	int posY;
 	
+
+	UFUNCTION(BlueprintCallable, Category = "Tower|Death")
+	void Die();
+
 	UPROPERTY()
 	TArray<AActor*> Enemies_Extra;
 
@@ -77,6 +95,9 @@ protected:
 	
 public:
 	
+	UFUNCTION()
+	void SetPosXY(int x, int y);
+
 
 	UFUNCTION(BlueprintCallable, Category = "Tower|Place")
 	ATower* Place();
@@ -97,10 +118,19 @@ public:
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Tower|Damage")
 	bool bIsAllowedToShoot= false;
 
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Tower|bIsDead")
+	bool isDead = false;
+
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Tower|bIsDead")
+	bool blasted = false;
+	
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Tower|bIsDead")
+	bool bSpriteDirectionRight = false;
+
 	UPROPERTY()
 	TArray<AActor*> Enemies;
 
-	UPROPERTY()
+	UPROPERTY(BlueprintReadWrite,  EditAnywhere)
 	AActor* EnemyToShoot;
 	UPROPERTY()
 	int EnemyToShoot_index = 0;
@@ -109,5 +139,9 @@ public:
 	UPROPERTY(EditAnywhere, Category = Projectile)
 	TSubclassOf<class AProjectileBase> ProjectileClass;
 	
+
+
+private:
+	float timer_ = 0.0f;
 
 };

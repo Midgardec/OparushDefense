@@ -1,0 +1,426 @@
+[
+	{
+		"file": "X:\\EpicGames_Unreal\\pROJECTs\\Oparush\\OparushDefense\\Source\\Game\\Beta_map.bmp",
+		"arguments": [
+			"C:\\Program Files (x86)\\Microsoft Visual Studio\\2019\\Community\\VC\\Tools\\MSVC\\14.29.30133\\bin\\HostX64\\x64\\cl.exe",
+			"@X:\\EpicGames_Unreal\\pROJECTs\\Oparush\\OparushDefense\\.vscode\\compileCommands_Game\\Game.267.rsp"
+		],
+		"directory": "X:\\EpicGames_Unreal\\UE_5.1\\Engine\\Source"
+	},
+	{
+		"file": "X:\\EpicGames_Unreal\\pROJECTs\\Oparush\\OparushDefense\\Source\\Game\\Game.Build.cs",
+		"arguments": [
+			"C:\\Program Files (x86)\\Microsoft Visual Studio\\2019\\Community\\VC\\Tools\\MSVC\\14.29.30133\\bin\\HostX64\\x64\\cl.exe",
+			"@X:\\EpicGames_Unreal\\pROJECTs\\Oparush\\OparushDefense\\.vscode\\compileCommands_Game\\Game.267.rsp"
+		],
+		"directory": "X:\\EpicGames_Unreal\\UE_5.1\\Engine\\Source"
+	},
+	{
+		"file": "X:\\EpicGames_Unreal\\pROJECTs\\Oparush\\OparushDefense\\Source\\Game\\Game.cpp",
+		"arguments": [
+			"C:\\Program Files (x86)\\Microsoft Visual Studio\\2019\\Community\\VC\\Tools\\MSVC\\14.29.30133\\bin\\HostX64\\x64\\cl.exe",
+			"@X:\\EpicGames_Unreal\\pROJECTs\\Oparush\\OparushDefense\\.vscode\\compileCommands_Game\\Game.267.rsp"
+		],
+		"directory": "X:\\EpicGames_Unreal\\UE_5.1\\Engine\\Source"
+	},
+	{
+		"file": "X:\\EpicGames_Unreal\\pROJECTs\\Oparush\\OparushDefense\\Source\\Game\\Game.h",
+		"arguments": [
+			"C:\\Program Files (x86)\\Microsoft Visual Studio\\2019\\Community\\VC\\Tools\\MSVC\\14.29.30133\\bin\\HostX64\\x64\\cl.exe",
+			"@X:\\EpicGames_Unreal\\pROJECTs\\Oparush\\OparushDefense\\.vscode\\compileCommands_Game\\Game.267.rsp"
+		],
+		"directory": "X:\\EpicGames_Unreal\\UE_5.1\\Engine\\Source"
+	},
+	{
+		"file": "X:\\EpicGames_Unreal\\pROJECTs\\Oparush\\OparushDefense\\Source\\Game\\GameGameModeBase.cpp",
+		"arguments": [
+			"C:\\Program Files (x86)\\Microsoft Visual Studio\\2019\\Community\\VC\\Tools\\MSVC\\14.29.30133\\bin\\HostX64\\x64\\cl.exe",
+			"@X:\\EpicGames_Unreal\\pROJECTs\\Oparush\\OparushDefense\\.vscode\\compileCommands_Game\\Game.267.rsp"
+		],
+		"directory": "X:\\EpicGames_Unreal\\UE_5.1\\Engine\\Source"
+	},
+	{
+		"file": "X:\\EpicGames_Unreal\\pROJECTs\\Oparush\\OparushDefense\\Source\\Game\\GameGameModeBase.h",
+		"arguments": [
+			"C:\\Program Files (x86)\\Microsoft Visual Studio\\2019\\Community\\VC\\Tools\\MSVC\\14.29.30133\\bin\\HostX64\\x64\\cl.exe",
+			"@X:\\EpicGames_Unreal\\pROJECTs\\Oparush\\OparushDefense\\.vscode\\compileCommands_Game\\Game.267.rsp"
+		],
+		"directory": "X:\\EpicGames_Unreal\\UE_5.1\\Engine\\Source"
+	},
+	{
+		"file": "X:\\EpicGames_Unreal\\pROJECTs\\Oparush\\OparushDefense\\Source\\Game\\Map.bmp",
+		"arguments": [
+			"C:\\Program Files (x86)\\Microsoft Visual Studio\\2019\\Community\\VC\\Tools\\MSVC\\14.29.30133\\bin\\HostX64\\x64\\cl.exe",
+			"@X:\\EpicGames_Unreal\\pROJECTs\\Oparush\\OparushDefense\\.vscode\\compileCommands_Game\\Game.267.rsp"
+		],
+		"directory": "X:\\EpicGames_Unreal\\UE_5.1\\Engine\\Source"
+	},
+	{
+		"file": "X:\\EpicGames_Unreal\\pROJECTs\\Oparush\\OparushDefense\\Source\\Game\\Map.jpg",
+		"arguments": [
+			"C:\\Program Files (x86)\\Microsoft Visual Studio\\2019\\Community\\VC\\Tools\\MSVC\\14.29.30133\\bin\\HostX64\\x64\\cl.exe",
+			"@X:\\EpicGames_Unreal\\pROJECTs\\Oparush\\OparushDefense\\.vscode\\compileCommands_Game\\Game.267.rsp"
+		],
+		"directory": "X:\\EpicGames_Unreal\\UE_5.1\\Engine\\Source"
+	},
+	{
+		"file": "X:\\EpicGames_Unreal\\pROJECTs\\Oparush\\OparushDefense\\Source\\Game\\Map.png",
+		"arguments": [
+			"C:\\Program Files (x86)\\Microsoft Visual Studio\\2019\\Community\\VC\\Tools\\MSVC\\14.29.30133\\bin\\HostX64\\x64\\cl.exe",
+			"@X:\\EpicGames_Unreal\\pROJECTs\\Oparush\\OparushDefense\\.vscode\\compileCommands_Game\\Game.267.rsp"
+		],
+		"directory": "X:\\EpicGames_Unreal\\UE_5.1\\Engine\\Source"
+	},
+	{
+		"file": "X:\\EpicGames_Unreal\\pROJECTs\\Oparush\\OparushDefense\\Source\\Game\\Map_.bmp",
+		"arguments": [
+			"C:\\Program Files (x86)\\Microsoft Visual Studio\\2019\\Community\\VC\\Tools\\MSVC\\14.29.30133\\bin\\HostX64\\x64\\cl.exe",
+			"@X:\\EpicGames_Unreal\\pROJECTs\\Oparush\\OparushDefense\\.vscode\\compileCommands_Game\\Game.267.rsp"
+		],
+		"directory": "X:\\EpicGames_Unreal\\UE_5.1\\Engine\\Source"
+	},
+	{
+		"file": "X:\\EpicGames_Unreal\\pROJECTs\\Oparush\\OparushDefense\\Source\\Game\\Private\\.idea\\.gitignore",
+		"arguments": [
+			"C:\\Program Files (x86)\\Microsoft Visual Studio\\2019\\Community\\VC\\Tools\\MSVC\\14.29.30133\\bin\\HostX64\\x64\\cl.exe",
+			"@X:\\EpicGames_Unreal\\pROJECTs\\Oparush\\OparushDefense\\.vscode\\compileCommands_Game\\Game.267.rsp"
+		],
+		"directory": "X:\\EpicGames_Unreal\\UE_5.1\\Engine\\Source"
+	},
+	{
+		"file": "X:\\EpicGames_Unreal\\pROJECTs\\Oparush\\OparushDefense\\Source\\Game\\Private\\.idea\\Private.iml",
+		"arguments": [
+			"C:\\Program Files (x86)\\Microsoft Visual Studio\\2019\\Community\\VC\\Tools\\MSVC\\14.29.30133\\bin\\HostX64\\x64\\cl.exe",
+			"@X:\\EpicGames_Unreal\\pROJECTs\\Oparush\\OparushDefense\\.vscode\\compileCommands_Game\\Game.267.rsp"
+		],
+		"directory": "X:\\EpicGames_Unreal\\UE_5.1\\Engine\\Source"
+	},
+	{
+		"file": "X:\\EpicGames_Unreal\\pROJECTs\\Oparush\\OparushDefense\\Source\\Game\\Private\\.idea\\modules.xml",
+		"arguments": [
+			"C:\\Program Files (x86)\\Microsoft Visual Studio\\2019\\Community\\VC\\Tools\\MSVC\\14.29.30133\\bin\\HostX64\\x64\\cl.exe",
+			"@X:\\EpicGames_Unreal\\pROJECTs\\Oparush\\OparushDefense\\.vscode\\compileCommands_Game\\Game.267.rsp"
+		],
+		"directory": "X:\\EpicGames_Unreal\\UE_5.1\\Engine\\Source"
+	},
+	{
+		"file": "X:\\EpicGames_Unreal\\pROJECTs\\Oparush\\OparushDefense\\Source\\Game\\Private\\.idea\\workspace.xml",
+		"arguments": [
+			"C:\\Program Files (x86)\\Microsoft Visual Studio\\2019\\Community\\VC\\Tools\\MSVC\\14.29.30133\\bin\\HostX64\\x64\\cl.exe",
+			"@X:\\EpicGames_Unreal\\pROJECTs\\Oparush\\OparushDefense\\.vscode\\compileCommands_Game\\Game.267.rsp"
+		],
+		"directory": "X:\\EpicGames_Unreal\\UE_5.1\\Engine\\Source"
+	},
+	{
+		"file": "X:\\EpicGames_Unreal\\pROJECTs\\Oparush\\OparushDefense\\Source\\Game\\Private\\CoinBase.cpp",
+		"arguments": [
+			"C:\\Program Files (x86)\\Microsoft Visual Studio\\2019\\Community\\VC\\Tools\\MSVC\\14.29.30133\\bin\\HostX64\\x64\\cl.exe",
+			"@X:\\EpicGames_Unreal\\pROJECTs\\Oparush\\OparushDefense\\.vscode\\compileCommands_Game\\Game.267.rsp"
+		],
+		"directory": "X:\\EpicGames_Unreal\\UE_5.1\\Engine\\Source"
+	},
+	{
+		"file": "X:\\EpicGames_Unreal\\pROJECTs\\Oparush\\OparushDefense\\Source\\Game\\Private\\EnemiesSpawner.cpp",
+		"arguments": [
+			"C:\\Program Files (x86)\\Microsoft Visual Studio\\2019\\Community\\VC\\Tools\\MSVC\\14.29.30133\\bin\\HostX64\\x64\\cl.exe",
+			"@X:\\EpicGames_Unreal\\pROJECTs\\Oparush\\OparushDefense\\.vscode\\compileCommands_Game\\Game.267.rsp"
+		],
+		"directory": "X:\\EpicGames_Unreal\\UE_5.1\\Engine\\Source"
+	},
+	{
+		"file": "X:\\EpicGames_Unreal\\pROJECTs\\Oparush\\OparushDefense\\Source\\Game\\Private\\EnemyAIController.cpp",
+		"arguments": [
+			"C:\\Program Files (x86)\\Microsoft Visual Studio\\2019\\Community\\VC\\Tools\\MSVC\\14.29.30133\\bin\\HostX64\\x64\\cl.exe",
+			"@X:\\EpicGames_Unreal\\pROJECTs\\Oparush\\OparushDefense\\.vscode\\compileCommands_Game\\Game.267.rsp"
+		],
+		"directory": "X:\\EpicGames_Unreal\\UE_5.1\\Engine\\Source"
+	},
+	{
+		"file": "X:\\EpicGames_Unreal\\pROJECTs\\Oparush\\OparushDefense\\Source\\Game\\Private\\EnemyBase.cpp",
+		"arguments": [
+			"C:\\Program Files (x86)\\Microsoft Visual Studio\\2019\\Community\\VC\\Tools\\MSVC\\14.29.30133\\bin\\HostX64\\x64\\cl.exe",
+			"@X:\\EpicGames_Unreal\\pROJECTs\\Oparush\\OparushDefense\\.vscode\\compileCommands_Game\\Game.267.rsp"
+		],
+		"directory": "X:\\EpicGames_Unreal\\UE_5.1\\Engine\\Source"
+	},
+	{
+		"file": "X:\\EpicGames_Unreal\\pROJECTs\\Oparush\\OparushDefense\\Source\\Game\\Private\\MyBoyPaper.cpp",
+		"arguments": [
+			"C:\\Program Files (x86)\\Microsoft Visual Studio\\2019\\Community\\VC\\Tools\\MSVC\\14.29.30133\\bin\\HostX64\\x64\\cl.exe",
+			"@X:\\EpicGames_Unreal\\pROJECTs\\Oparush\\OparushDefense\\.vscode\\compileCommands_Game\\Game.267.rsp"
+		],
+		"directory": "X:\\EpicGames_Unreal\\UE_5.1\\Engine\\Source"
+	},
+	{
+		"file": "X:\\EpicGames_Unreal\\pROJECTs\\Oparush\\OparushDefense\\Source\\Game\\Private\\MyCharacter.cpp",
+		"arguments": [
+			"C:\\Program Files (x86)\\Microsoft Visual Studio\\2019\\Community\\VC\\Tools\\MSVC\\14.29.30133\\bin\\HostX64\\x64\\cl.exe",
+			"@X:\\EpicGames_Unreal\\pROJECTs\\Oparush\\OparushDefense\\.vscode\\compileCommands_Game\\Game.267.rsp"
+		],
+		"directory": "X:\\EpicGames_Unreal\\UE_5.1\\Engine\\Source"
+	},
+	{
+		"file": "X:\\EpicGames_Unreal\\pROJECTs\\Oparush\\OparushDefense\\Source\\Game\\Private\\MyMap.cpp",
+		"arguments": [
+			"C:\\Program Files (x86)\\Microsoft Visual Studio\\2019\\Community\\VC\\Tools\\MSVC\\14.29.30133\\bin\\HostX64\\x64\\cl.exe",
+			"@X:\\EpicGames_Unreal\\pROJECTs\\Oparush\\OparushDefense\\.vscode\\compileCommands_Game\\Game.267.rsp"
+		],
+		"directory": "X:\\EpicGames_Unreal\\UE_5.1\\Engine\\Source"
+	},
+	{
+		"file": "X:\\EpicGames_Unreal\\pROJECTs\\Oparush\\OparushDefense\\Source\\Game\\Private\\MyTile.cpp",
+		"arguments": [
+			"C:\\Program Files (x86)\\Microsoft Visual Studio\\2019\\Community\\VC\\Tools\\MSVC\\14.29.30133\\bin\\HostX64\\x64\\cl.exe",
+			"@X:\\EpicGames_Unreal\\pROJECTs\\Oparush\\OparushDefense\\.vscode\\compileCommands_Game\\Game.267.rsp"
+		],
+		"directory": "X:\\EpicGames_Unreal\\UE_5.1\\Engine\\Source"
+	},
+	{
+		"file": "X:\\EpicGames_Unreal\\pROJECTs\\Oparush\\OparushDefense\\Source\\Game\\Private\\MyTile_grass.cpp",
+		"arguments": [
+			"C:\\Program Files (x86)\\Microsoft Visual Studio\\2019\\Community\\VC\\Tools\\MSVC\\14.29.30133\\bin\\HostX64\\x64\\cl.exe",
+			"@X:\\EpicGames_Unreal\\pROJECTs\\Oparush\\OparushDefense\\.vscode\\compileCommands_Game\\Game.267.rsp"
+		],
+		"directory": "X:\\EpicGames_Unreal\\UE_5.1\\Engine\\Source"
+	},
+	{
+		"file": "X:\\EpicGames_Unreal\\pROJECTs\\Oparush\\OparushDefense\\Source\\Game\\Private\\NodePoint.cpp",
+		"arguments": [
+			"C:\\Program Files (x86)\\Microsoft Visual Studio\\2019\\Community\\VC\\Tools\\MSVC\\14.29.30133\\bin\\HostX64\\x64\\cl.exe",
+			"@X:\\EpicGames_Unreal\\pROJECTs\\Oparush\\OparushDefense\\.vscode\\compileCommands_Game\\Game.267.rsp"
+		],
+		"directory": "X:\\EpicGames_Unreal\\UE_5.1\\Engine\\Source"
+	},
+	{
+		"file": "X:\\EpicGames_Unreal\\pROJECTs\\Oparush\\OparushDefense\\Source\\Game\\Private\\Pickup.cpp",
+		"arguments": [
+			"C:\\Program Files (x86)\\Microsoft Visual Studio\\2019\\Community\\VC\\Tools\\MSVC\\14.29.30133\\bin\\HostX64\\x64\\cl.exe",
+			"@X:\\EpicGames_Unreal\\pROJECTs\\Oparush\\OparushDefense\\.vscode\\compileCommands_Game\\Game.267.rsp"
+		],
+		"directory": "X:\\EpicGames_Unreal\\UE_5.1\\Engine\\Source"
+	},
+	{
+		"file": "X:\\EpicGames_Unreal\\pROJECTs\\Oparush\\OparushDefense\\Source\\Game\\Private\\ProjectileBase.cpp",
+		"arguments": [
+			"C:\\Program Files (x86)\\Microsoft Visual Studio\\2019\\Community\\VC\\Tools\\MSVC\\14.29.30133\\bin\\HostX64\\x64\\cl.exe",
+			"@X:\\EpicGames_Unreal\\pROJECTs\\Oparush\\OparushDefense\\.vscode\\compileCommands_Game\\Game.267.rsp"
+		],
+		"directory": "X:\\EpicGames_Unreal\\UE_5.1\\Engine\\Source"
+	},
+	{
+		"file": "X:\\EpicGames_Unreal\\pROJECTs\\Oparush\\OparushDefense\\Source\\Game\\Private\\TargetTester.cpp",
+		"arguments": [
+			"C:\\Program Files (x86)\\Microsoft Visual Studio\\2019\\Community\\VC\\Tools\\MSVC\\14.29.30133\\bin\\HostX64\\x64\\cl.exe",
+			"@X:\\EpicGames_Unreal\\pROJECTs\\Oparush\\OparushDefense\\.vscode\\compileCommands_Game\\Game.267.rsp"
+		],
+		"directory": "X:\\EpicGames_Unreal\\UE_5.1\\Engine\\Source"
+	},
+	{
+		"file": "X:\\EpicGames_Unreal\\pROJECTs\\Oparush\\OparushDefense\\Source\\Game\\Private\\Tower.cpp",
+		"arguments": [
+			"C:\\Program Files (x86)\\Microsoft Visual Studio\\2019\\Community\\VC\\Tools\\MSVC\\14.29.30133\\bin\\HostX64\\x64\\cl.exe",
+			"@X:\\EpicGames_Unreal\\pROJECTs\\Oparush\\OparushDefense\\.vscode\\compileCommands_Game\\Game.267.rsp"
+		],
+		"directory": "X:\\EpicGames_Unreal\\UE_5.1\\Engine\\Source"
+	},
+	{
+		"file": "X:\\EpicGames_Unreal\\pROJECTs\\Oparush\\OparushDefense\\Source\\Game\\Private\\Waypoint.cpp",
+		"arguments": [
+			"C:\\Program Files (x86)\\Microsoft Visual Studio\\2019\\Community\\VC\\Tools\\MSVC\\14.29.30133\\bin\\HostX64\\x64\\cl.exe",
+			"@X:\\EpicGames_Unreal\\pROJECTs\\Oparush\\OparushDefense\\.vscode\\compileCommands_Game\\Game.267.rsp"
+		],
+		"directory": "X:\\EpicGames_Unreal\\UE_5.1\\Engine\\Source"
+	},
+	{
+		"file": "X:\\EpicGames_Unreal\\pROJECTs\\Oparush\\OparushDefense\\Source\\Game\\Public\\.idea\\.gitignore",
+		"arguments": [
+			"C:\\Program Files (x86)\\Microsoft Visual Studio\\2019\\Community\\VC\\Tools\\MSVC\\14.29.30133\\bin\\HostX64\\x64\\cl.exe",
+			"@X:\\EpicGames_Unreal\\pROJECTs\\Oparush\\OparushDefense\\.vscode\\compileCommands_Game\\Game.267.rsp"
+		],
+		"directory": "X:\\EpicGames_Unreal\\UE_5.1\\Engine\\Source"
+	},
+	{
+		"file": "X:\\EpicGames_Unreal\\pROJECTs\\Oparush\\OparushDefense\\Source\\Game\\Public\\.idea\\Public.iml",
+		"arguments": [
+			"C:\\Program Files (x86)\\Microsoft Visual Studio\\2019\\Community\\VC\\Tools\\MSVC\\14.29.30133\\bin\\HostX64\\x64\\cl.exe",
+			"@X:\\EpicGames_Unreal\\pROJECTs\\Oparush\\OparushDefense\\.vscode\\compileCommands_Game\\Game.267.rsp"
+		],
+		"directory": "X:\\EpicGames_Unreal\\UE_5.1\\Engine\\Source"
+	},
+	{
+		"file": "X:\\EpicGames_Unreal\\pROJECTs\\Oparush\\OparushDefense\\Source\\Game\\Public\\.idea\\modules.xml",
+		"arguments": [
+			"C:\\Program Files (x86)\\Microsoft Visual Studio\\2019\\Community\\VC\\Tools\\MSVC\\14.29.30133\\bin\\HostX64\\x64\\cl.exe",
+			"@X:\\EpicGames_Unreal\\pROJECTs\\Oparush\\OparushDefense\\.vscode\\compileCommands_Game\\Game.267.rsp"
+		],
+		"directory": "X:\\EpicGames_Unreal\\UE_5.1\\Engine\\Source"
+	},
+	{
+		"file": "X:\\EpicGames_Unreal\\pROJECTs\\Oparush\\OparushDefense\\Source\\Game\\Public\\.idea\\workspace.xml",
+		"arguments": [
+			"C:\\Program Files (x86)\\Microsoft Visual Studio\\2019\\Community\\VC\\Tools\\MSVC\\14.29.30133\\bin\\HostX64\\x64\\cl.exe",
+			"@X:\\EpicGames_Unreal\\pROJECTs\\Oparush\\OparushDefense\\.vscode\\compileCommands_Game\\Game.267.rsp"
+		],
+		"directory": "X:\\EpicGames_Unreal\\UE_5.1\\Engine\\Source"
+	},
+	{
+		"file": "X:\\EpicGames_Unreal\\pROJECTs\\Oparush\\OparushDefense\\Source\\Game\\Public\\CoinBase.h",
+		"arguments": [
+			"C:\\Program Files (x86)\\Microsoft Visual Studio\\2019\\Community\\VC\\Tools\\MSVC\\14.29.30133\\bin\\HostX64\\x64\\cl.exe",
+			"@X:\\EpicGames_Unreal\\pROJECTs\\Oparush\\OparushDefense\\.vscode\\compileCommands_Game\\Game.267.rsp"
+		],
+		"directory": "X:\\EpicGames_Unreal\\UE_5.1\\Engine\\Source"
+	},
+	{
+		"file": "X:\\EpicGames_Unreal\\pROJECTs\\Oparush\\OparushDefense\\Source\\Game\\Public\\EnemiesSpawner.h",
+		"arguments": [
+			"C:\\Program Files (x86)\\Microsoft Visual Studio\\2019\\Community\\VC\\Tools\\MSVC\\14.29.30133\\bin\\HostX64\\x64\\cl.exe",
+			"@X:\\EpicGames_Unreal\\pROJECTs\\Oparush\\OparushDefense\\.vscode\\compileCommands_Game\\Game.267.rsp"
+		],
+		"directory": "X:\\EpicGames_Unreal\\UE_5.1\\Engine\\Source"
+	},
+	{
+		"file": "X:\\EpicGames_Unreal\\pROJECTs\\Oparush\\OparushDefense\\Source\\Game\\Public\\EnemyAIController.h",
+		"arguments": [
+			"C:\\Program Files (x86)\\Microsoft Visual Studio\\2019\\Community\\VC\\Tools\\MSVC\\14.29.30133\\bin\\HostX64\\x64\\cl.exe",
+			"@X:\\EpicGames_Unreal\\pROJECTs\\Oparush\\OparushDefense\\.vscode\\compileCommands_Game\\Game.267.rsp"
+		],
+		"directory": "X:\\EpicGames_Unreal\\UE_5.1\\Engine\\Source"
+	},
+	{
+		"file": "X:\\EpicGames_Unreal\\pROJECTs\\Oparush\\OparushDefense\\Source\\Game\\Public\\EnemyBase.h",
+		"arguments": [
+			"C:\\Program Files (x86)\\Microsoft Visual Studio\\2019\\Community\\VC\\Tools\\MSVC\\14.29.30133\\bin\\HostX64\\x64\\cl.exe",
+			"@X:\\EpicGames_Unreal\\pROJECTs\\Oparush\\OparushDefense\\.vscode\\compileCommands_Game\\Game.267.rsp"
+		],
+		"directory": "X:\\EpicGames_Unreal\\UE_5.1\\Engine\\Source"
+	},
+	{
+		"file": "X:\\EpicGames_Unreal\\pROJECTs\\Oparush\\OparushDefense\\Source\\Game\\Public\\MyBoyPaper.h",
+		"arguments": [
+			"C:\\Program Files (x86)\\Microsoft Visual Studio\\2019\\Community\\VC\\Tools\\MSVC\\14.29.30133\\bin\\HostX64\\x64\\cl.exe",
+			"@X:\\EpicGames_Unreal\\pROJECTs\\Oparush\\OparushDefense\\.vscode\\compileCommands_Game\\Game.267.rsp"
+		],
+		"directory": "X:\\EpicGames_Unreal\\UE_5.1\\Engine\\Source"
+	},
+	{
+		"file": "X:\\EpicGames_Unreal\\pROJECTs\\Oparush\\OparushDefense\\Source\\Game\\Public\\MyCharacter.h",
+		"arguments": [
+			"C:\\Program Files (x86)\\Microsoft Visual Studio\\2019\\Community\\VC\\Tools\\MSVC\\14.29.30133\\bin\\HostX64\\x64\\cl.exe",
+			"@X:\\EpicGames_Unreal\\pROJECTs\\Oparush\\OparushDefense\\.vscode\\compileCommands_Game\\Game.267.rsp"
+		],
+		"directory": "X:\\EpicGames_Unreal\\UE_5.1\\Engine\\Source"
+	},
+	{
+		"file": "X:\\EpicGames_Unreal\\pROJECTs\\Oparush\\OparushDefense\\Source\\Game\\Public\\MyMap.h",
+		"arguments": [
+			"C:\\Program Files (x86)\\Microsoft Visual Studio\\2019\\Community\\VC\\Tools\\MSVC\\14.29.30133\\bin\\HostX64\\x64\\cl.exe",
+			"@X:\\EpicGames_Unreal\\pROJECTs\\Oparush\\OparushDefense\\.vscode\\compileCommands_Game\\Game.267.rsp"
+		],
+		"directory": "X:\\EpicGames_Unreal\\UE_5.1\\Engine\\Source"
+	},
+	{
+		"file": "X:\\EpicGames_Unreal\\pROJECTs\\Oparush\\OparushDefense\\Source\\Game\\Public\\MyTile.h",
+		"arguments": [
+			"C:\\Program Files (x86)\\Microsoft Visual Studio\\2019\\Community\\VC\\Tools\\MSVC\\14.29.30133\\bin\\HostX64\\x64\\cl.exe",
+			"@X:\\EpicGames_Unreal\\pROJECTs\\Oparush\\OparushDefense\\.vscode\\compileCommands_Game\\Game.267.rsp"
+		],
+		"directory": "X:\\EpicGames_Unreal\\UE_5.1\\Engine\\Source"
+	},
+	{
+		"file": "X:\\EpicGames_Unreal\\pROJECTs\\Oparush\\OparushDefense\\Source\\Game\\Public\\MyTile_grass.h",
+		"arguments": [
+			"C:\\Program Files (x86)\\Microsoft Visual Studio\\2019\\Community\\VC\\Tools\\MSVC\\14.29.30133\\bin\\HostX64\\x64\\cl.exe",
+			"@X:\\EpicGames_Unreal\\pROJECTs\\Oparush\\OparushDefense\\.vscode\\compileCommands_Game\\Game.267.rsp"
+		],
+		"directory": "X:\\EpicGames_Unreal\\UE_5.1\\Engine\\Source"
+	},
+	{
+		"file": "X:\\EpicGames_Unreal\\pROJECTs\\Oparush\\OparushDefense\\Source\\Game\\Public\\NodePoint.h",
+		"arguments": [
+			"C:\\Program Files (x86)\\Microsoft Visual Studio\\2019\\Community\\VC\\Tools\\MSVC\\14.29.30133\\bin\\HostX64\\x64\\cl.exe",
+			"@X:\\EpicGames_Unreal\\pROJECTs\\Oparush\\OparushDefense\\.vscode\\compileCommands_Game\\Game.267.rsp"
+		],
+		"directory": "X:\\EpicGames_Unreal\\UE_5.1\\Engine\\Source"
+	},
+	{
+		"file": "X:\\EpicGames_Unreal\\pROJECTs\\Oparush\\OparushDefense\\Source\\Game\\Public\\Pickup.h",
+		"arguments": [
+			"C:\\Program Files (x86)\\Microsoft Visual Studio\\2019\\Community\\VC\\Tools\\MSVC\\14.29.30133\\bin\\HostX64\\x64\\cl.exe",
+			"@X:\\EpicGames_Unreal\\pROJECTs\\Oparush\\OparushDefense\\.vscode\\compileCommands_Game\\Game.267.rsp"
+		],
+		"directory": "X:\\EpicGames_Unreal\\UE_5.1\\Engine\\Source"
+	},
+	{
+		"file": "X:\\EpicGames_Unreal\\pROJECTs\\Oparush\\OparushDefense\\Source\\Game\\Public\\ProjectileBase.h",
+		"arguments": [
+			"C:\\Program Files (x86)\\Microsoft Visual Studio\\2019\\Community\\VC\\Tools\\MSVC\\14.29.30133\\bin\\HostX64\\x64\\cl.exe",
+			"@X:\\EpicGames_Unreal\\pROJECTs\\Oparush\\OparushDefense\\.vscode\\compileCommands_Game\\Game.267.rsp"
+		],
+		"directory": "X:\\EpicGames_Unreal\\UE_5.1\\Engine\\Source"
+	},
+	{
+		"file": "X:\\EpicGames_Unreal\\pROJECTs\\Oparush\\OparushDefense\\Source\\Game\\Public\\TargetTester.h",
+		"arguments": [
+			"C:\\Program Files (x86)\\Microsoft Visual Studio\\2019\\Community\\VC\\Tools\\MSVC\\14.29.30133\\bin\\HostX64\\x64\\cl.exe",
+			"@X:\\EpicGames_Unreal\\pROJECTs\\Oparush\\OparushDefense\\.vscode\\compileCommands_Game\\Game.267.rsp"
+		],
+		"directory": "X:\\EpicGames_Unreal\\UE_5.1\\Engine\\Source"
+	},
+	{
+		"file": "X:\\EpicGames_Unreal\\pROJECTs\\Oparush\\OparushDefense\\Source\\Game\\Public\\Tower.h",
+		"arguments": [
+			"C:\\Program Files (x86)\\Microsoft Visual Studio\\2019\\Community\\VC\\Tools\\MSVC\\14.29.30133\\bin\\HostX64\\x64\\cl.exe",
+			"@X:\\EpicGames_Unreal\\pROJECTs\\Oparush\\OparushDefense\\.vscode\\compileCommands_Game\\Game.267.rsp"
+		],
+		"directory": "X:\\EpicGames_Unreal\\UE_5.1\\Engine\\Source"
+	},
+	{
+		"file": "X:\\EpicGames_Unreal\\pROJECTs\\Oparush\\OparushDefense\\Source\\Game\\Public\\Waypoint.h",
+		"arguments": [
+			"C:\\Program Files (x86)\\Microsoft Visual Studio\\2019\\Community\\VC\\Tools\\MSVC\\14.29.30133\\bin\\HostX64\\x64\\cl.exe",
+			"@X:\\EpicGames_Unreal\\pROJECTs\\Oparush\\OparushDefense\\.vscode\\compileCommands_Game\\Game.267.rsp"
+		],
+		"directory": "X:\\EpicGames_Unreal\\UE_5.1\\Engine\\Source"
+	},
+	{
+		"file": "X:\\EpicGames_Unreal\\pROJECTs\\Oparush\\OparushDefense\\Source\\Game\\Public\\stb_image.cpp",
+		"arguments": [
+			"C:\\Program Files (x86)\\Microsoft Visual Studio\\2019\\Community\\VC\\Tools\\MSVC\\14.29.30133\\bin\\HostX64\\x64\\cl.exe",
+			"@X:\\EpicGames_Unreal\\pROJECTs\\Oparush\\OparushDefense\\.vscode\\compileCommands_Game\\Game.267.rsp"
+		],
+		"directory": "X:\\EpicGames_Unreal\\UE_5.1\\Engine\\Source"
+	},
+	{
+		"file": "X:\\EpicGames_Unreal\\pROJECTs\\Oparush\\OparushDefense\\Source\\Game\\Public\\stb_image.h",
+		"arguments": [
+			"C:\\Program Files (x86)\\Microsoft Visual Studio\\2019\\Community\\VC\\Tools\\MSVC\\14.29.30133\\bin\\HostX64\\x64\\cl.exe",
+			"@X:\\EpicGames_Unreal\\pROJECTs\\Oparush\\OparushDefense\\.vscode\\compileCommands_Game\\Game.267.rsp"
+		],
+		"directory": "X:\\EpicGames_Unreal\\UE_5.1\\Engine\\Source"
+	},
+	{
+		"file": "X:\\EpicGames_Unreal\\pROJECTs\\Oparush\\OparushDefense\\Source\\Game\\Untitled.png",
+		"arguments": [
+			"C:\\Program Files (x86)\\Microsoft Visual Studio\\2019\\Community\\VC\\Tools\\MSVC\\14.29.30133\\bin\\HostX64\\x64\\cl.exe",
+			"@X:\\EpicGames_Unreal\\pROJECTs\\Oparush\\OparushDefense\\.vscode\\compileCommands_Game\\Game.267.rsp"
+		],
+		"directory": "X:\\EpicGames_Unreal\\UE_5.1\\Engine\\Source"
+	},
+	{
+		"file": "X:\\EpicGames_Unreal\\pROJECTs\\Oparush\\OparushDefense\\Source\\Game\\bitmap_image.hpp",
+		"arguments": [
+			"C:\\Program Files (x86)\\Microsoft Visual Studio\\2019\\Community\\VC\\Tools\\MSVC\\14.29.30133\\bin\\HostX64\\x64\\cl.exe",
+			"@X:\\EpicGames_Unreal\\pROJECTs\\Oparush\\OparushDefense\\.vscode\\compileCommands_Game\\Game.267.rsp"
+		],
+		"directory": "X:\\EpicGames_Unreal\\UE_5.1\\Engine\\Source"
+	},
+	{
+		"file": "X:\\EpicGames_Unreal\\pROJECTs\\Oparush\\OparushDefense\\Source\\Game\\map2.bmp",
+		"arguments": [
+			"C:\\Program Files (x86)\\Microsoft Visual Studio\\2019\\Community\\VC\\Tools\\MSVC\\14.29.30133\\bin\\HostX64\\x64\\cl.exe",
+			"@X:\\EpicGames_Unreal\\pROJECTs\\Oparush\\OparushDefense\\.vscode\\compileCommands_Game\\Game.267.rsp"
+		],
+		"directory": "X:\\EpicGames_Unreal\\UE_5.1\\Engine\\Source"
+	}
+]

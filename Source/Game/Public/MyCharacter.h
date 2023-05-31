@@ -46,7 +46,10 @@ public:
 
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
+	void SetAsReady();
+	void SetReady(bool state);
 	void ChangeSprite(EDirection NewDirection);
+	void CanStartNextWave(bool bCond);
 
 protected:
 	UFUNCTION()
@@ -74,7 +77,17 @@ public:
 	
 	FVector Direction;
 	bool bReadyForWave = false;
-
+	bool bCanStartWave = true;
+	UPROPERTY(BlueprintReadWrite)
+	int WaveIndex = 1;
+	UPROPERTY(BlueprintReadWrite)
+	float timer_ = 0.0f;
+	UPROPERTY(BlueprintReadWrite)
+	float time_between_waves = 20;
+	UPROPERTY(BlueprintReadWrite)
+	bool bWaveStart = false;
+	UPROPERTY(BlueprintReadWrite)
+	bool bCanChangeWave = false;
 private:
 
 	//------------------------------------------------------ old character's setup
@@ -167,6 +180,10 @@ protected:
 	///
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Player's Vars|Coins")
 	float coinsAmount = 0.0f;
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Player's Vars|Health")
+	float MaxCastleHealth = 500.0f;
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Player's Vars|Health")
+	float CurrentCastleHealth = 0.0f;
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Player's Vars|Nuts")
 	float nutsAmount = 0.0f;
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Camera|MoveSpeed")
@@ -183,7 +200,21 @@ protected:
 	UPROPERTY(BlueprintReadOnly)
 	ATower *Tower;
 public:
+
+	UFUNCTION(BlueprintCallable, Category = "Coins|")
+	float GetCoins();
+
+	UFUNCTION(BlueprintCallable, Category = "Coins|ADD")
+	void AddCoins(float coins);
+
+	UFUNCTION(BlueprintCallable, Category = "Coins|SPEND")
+	bool SpendCoins(float coins);
 	
+
+
+	UFUNCTION(BlueprintCallable, Category = "Castle|Damage")
+	void ApplyDamageOnCastle(float damageAmount);
+
 	UPROPERTY(BlueprintReadWrite)
 	AMyMap *Map;
 	

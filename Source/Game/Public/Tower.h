@@ -109,7 +109,7 @@ public:
 
 	bool SuperClassIsEnemy(const UClass* Input);
 	
-	UPROPERTY()
+	UPROPERTY(BlueprintReadWrite, EditAnywhere)
 	bool Placed;
 
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Tower|Damage")

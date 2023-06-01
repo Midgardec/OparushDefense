@@ -91,7 +91,7 @@ void ATower::Tick(float DeltaTime)
 			}
 			else
 			{
-				GEngine->AddOnScreenDebugMessage(-1, 1.f, FColor::Orange, FString::Printf(TEXT("invalid Enemy")));
+				//GEngine->AddOnScreenDebugMessage(-1, 1.f, FColor::Orange, FString::Printf(TEXT("invalid Enemy")));
 				Cast<AMyCharacter>(UGameplayStatics::GetPlayerPawn(GetWorld(), 0))->bWaveStart = false;
 
 				bIsAllowedToShoot = false;
@@ -109,6 +109,8 @@ void ATower::Tick(float DeltaTime)
 				// GEngine->AddOnScreenDebugMessage(-1, 15.f, FColor::Orange, FString::Printf(TEXT("%i Enemies"), Enemies.Num()));
 				timer_ = 0;
 				Blast();
+			}else{
+				blasted = false;
 			}
 		}
 	}
@@ -162,7 +164,7 @@ void ATower::Heal(const float Input)
 void ATower::Die()
 {
 	bIsAllowedToShoot = false;
-	GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Red, FString::Printf(TEXT("Tower is dead")));
+	//GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Red, FString::Printf(TEXT("Tower is dead")));
 	isDead = true;
 	Cast<AMyCharacter>(UGameplayStatics::GetPlayerPawn(GetWorld(), 0))->Map->MapChange(posX, posY, "DESTROYED");
 	this->SetLifeSpan(1.f);
@@ -175,7 +177,7 @@ void ATower::Blast()
 		return;
 	}
 	blasted = true;
-	GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::White, FString::Printf(TEXT("BLAST %i"), BlastCounter));
+	//GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::White, FString::Printf(TEXT("BLAST %i"), BlastCounter));
 
 	this->BlastCounter++;
 	/// TODO: Create a new projectile and set its properties
@@ -207,7 +209,7 @@ void ATower::Blast()
 	if (Projectile)
 	{
 		// Set the projectile's initial trajectory.
-		FVector LaunchDirection = (EnemyToShoot->GetActorLocation() - GetActorLocation()).GetSafeNormal();
+		FVector LaunchDirection = (EnemyToShoot->GetActorLocation() - GetActorLocation() - FVector(0,0,-20)).GetSafeNormal();
 		Projectile->SetVelocity(LaunchDirection);
 	}
 	

@@ -165,7 +165,7 @@ void AEnemyBase::MoveBetweenPoints(float DeltaTime)
 
 void AEnemyBase::DamageCastle()
 {
-	GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::White, FString::Printf(TEXT("DAMAGING")));
+	//GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::White, FString::Printf(TEXT("DAMAGING")));
 	GetPlayer()->ApplyDamageOnCastle(DamageAmount);
 }
 // Called every frame
@@ -242,7 +242,7 @@ void AEnemyBase::Die(float TimeBeforeDie)
 	SpawnCoins();
 	// death timer
 
-	GEngine->AddOnScreenDebugMessage(-1, 15.f, FColor::White, FString::Printf(TEXT("dieing")));
+	//GEngine->AddOnScreenDebugMessage(-1, 15.f, FColor::White, FString::Printf(TEXT("dieing")));
 	SetLifeSpan(TimeBeforeDie);
 }
 
@@ -307,7 +307,7 @@ auto AEnemyBase::Place() -> AEnemyBase *
 void AEnemyBase::AddDamage(float Damage)
 {
 	this->SetHealth(this->GetHealth() - Damage);
-	if (Health <= 0)
+	if (Health <= 0 && !isDead)
 	{
 		this->Die(1);
 	}

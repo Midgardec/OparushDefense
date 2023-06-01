@@ -6,7 +6,9 @@
 #include "Tower.h"
 #include "MyMap.h"
 #include "ActorFactories/ActorFactoryTriggerBox.h"
+
 #include "PaperSpriteComponent.h"
+#include "PaperFlipbookComponent.h"
 #include "Components/BoxComponent.h"
 #include "Components/PostProcessComponent.h"
 #include "Camera/CameraComponent.h"
@@ -14,8 +16,7 @@
 #include "GameFramework/Character.h"
 #include "MyCharacter.generated.h"
 
-
-UENUM(BlueprintType, meta = (UseEnumValuesAsMaskValuesInEditor="true"))
+UENUM(BlueprintType, meta = (UseEnumValuesAsMaskValuesInEditor = "true"))
 enum class EDirection : uint8
 {
 	Up UMETA(DisplayName = "Up"),
@@ -23,7 +24,6 @@ enum class EDirection : uint8
 	Left UMETA(DisplayName = "Left"),
 	Right UMETA(DisplayName = "Right")
 };
-
 
 class UCameraComponent;
 class USpringArmComponent;
@@ -40,12 +40,12 @@ protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
-public:	
+public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
 	// Called to bind functionality to input
-	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
+	virtual void SetupPlayerInputComponent(class UInputComponent *PlayerInputComponent) override;
 	void SetAsReady();
 	void SetReady(bool state);
 	void ChangeSprite(EDirection NewDirection);
@@ -60,21 +60,21 @@ protected:
 	virtual void Zoom(float AxisValue);
 	UFUNCTION(BlueprintCallable, Category = "Tower|Place")
 	virtual void PlaceTower();
-	
+
 	UFUNCTION(BlueprintCallable, Category = "Tower|Spawn")
 	virtual void SpawnTower(float DeltaTime);
-	//virtual void SpawnTower(ATower *Tower);
+	// virtual void SpawnTower(ATower *Tower);
 	UFUNCTION(BlueprintCallable, Category = "Tower|Change")
 	virtual void ChangeTower();
 	UFUNCTION(BlueprintCallable, Category = "Player|Collision|Overlap")
-	virtual void OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
+	virtual void OnOverlapBegin(UPrimitiveComponent *OverlappedComp, AActor *OtherActor, UPrimitiveComponent *OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult &SweepResult);
 	UFUNCTION(BlueprintCallable, Category = "Player|Collision|Overlap")
-	virtual void OnOverlapEnd(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex);
+	virtual void OnOverlapEnd(UPrimitiveComponent *OverlappedComp, AActor *OtherActor, UPrimitiveComponent *OtherComp, int32 OtherBodyIndex);
 
 public:
-	UPROPERTY(BlueprintReadWrite,EditAnywhere, meta = (AllowPrivateAccess = "true"))
-	UBoxComponent* Collision;
-	
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, meta = (AllowPrivateAccess = "true"))
+	UBoxComponent *Collision;
+
 	FVector Direction;
 	bool bReadyForWave = false;
 	bool bCanStartWave = true;
@@ -88,24 +88,29 @@ public:
 	bool bWaveStart = false;
 	UPROPERTY(BlueprintReadWrite)
 	bool bCanChangeWave = false;
-private:
 
+	FVector LastPosition = FVector(0,0,0);
+	UPROPERTY(BlueprintReadWrite)
+	bool bIsMovingV = false;
+UPROPERTY(BlueprintReadWrite)
+	bool bIsMovingH = false;
+
+private:
 	//------------------------------------------------------ old character's setup
 	UPROPERTY(BlueprintReadWrite, VisibleAnywhere, meta = (AllowPrivateAccess = "true"))
-	USceneComponent* SceneComponent;
-	
-	UPROPERTY(BlueprintReadWrite, EditAnywhere, meta = (AllowPrivateAccess = "true"))
-	USpringArmComponent* SpringArmComponent;
-	
-	UPROPERTY(BlueprintReadWrite, VisibleAnywhere, meta = (AllowPrivateAccess = "true"))
-	UCameraComponent* CameraComponent;
+	USceneComponent *SceneComponent;
 
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, meta = (AllowPrivateAccess = "true"))
+	USpringArmComponent *SpringArmComponent;
+
+	UPROPERTY(BlueprintReadWrite, VisibleAnywhere, meta = (AllowPrivateAccess = "true"))
+	UCameraComponent *CameraComponent;
 
 	//------------------------------------------------------ new character's setup
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, meta=(AllowPrivateAccess = "true"))
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
 	TObjectPtr<UCapsuleComponent> MyCapsuleComponent;
-	
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, meta=(AllowPrivateAccess = "true"))
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
 	TObjectPtr<USkeletalMeshComponent> MyMesh;
 
 	/*UPROPERTY(BlueprintReadWrite, VisibleAnywhere, meta = (AllowPrivateAccess = "true"))
@@ -116,63 +121,61 @@ private:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, meta=(AllowPrivateAccess = "true"))
 	UPostProcessComponent* PostProcessComponent;
 	*/
-	
+
 	// ---- sprite setup vars
-		// Переменная для хранения текущего направления спрайта
+	// Переменная для хранения текущего направления спрайта
 	EDirection CurrentDirection = EDirection::Right;
-	
-		// Задаем список спрайтов для каждого направления
+
+	// Задаем список спрайтов для каждого направления
 	UPROPERTY(EditAnywhere, Category = "Sprite")
-	TMap<EDirection, UPaperSprite*> Sprites;
-	
-		// Компонент спрайта
+	TMap<EDirection, UPaperFlipbook*> SpritesRun;
+
+	// Задаем список спрайтов для каждого направления
+	UPROPERTY(EditAnywhere, Category = "Sprite")
+	TMap<EDirection, UPaperFlipbook*> SpritesIdle;
+
+	// Компонент спрайта
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Sprite", meta = (AllowPrivateAccess = "true"))
-	UPaperSpriteComponent* SpriteComponent;
+	UPaperFlipbookComponent *FlipbookComponent;
 
-		// Используемый спрайт
+	// Используемый спрайт
 	UPROPERTY(BlueprintReadWrite, Category = "Sprite", meta = (AllowPrivateAccess = "true"))
-	UPaperSprite* CurrentSprite;
-	
+	UPaperFlipbook *CurrentSprite;
 
-	
 	UPROPERTY()
 	FVector TargetLocation;
-	
+
 	UPROPERTY()
 	float TargetZoom;
-	
+
 	UPROPERTY()
 	FRotator TargetRotation;
-
 
 	// tower's vars
 	UPROPERTY()
 	bool Overlapped;
-	
+
 	UPROPERTY()
-	ATower* OverlappedTower;
-	
+	ATower *OverlappedTower;
+
 	UPROPERTY()
-	ATower* TowerMember;
+	ATower *TowerMember;
 
 	UPROPERTY()
 	FVector TowerMemberLocationShift;
-	
+
 	UPROPERTY()
 	FVector TowerMemberLocation;
 
 	UPROPERTY()
 	bool bMoveVert;
-	
+
 	UPROPERTY()
 	bool bMoveHoriz;
 
 	UPROPERTY()
 	bool bCanPlace;
 
-
-	
-	
 protected:
 	/// ------------------------
 	/// vars for setting camera
@@ -196,11 +199,11 @@ protected:
 	float ZoomMin = 1500.0f;
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Camera|Zoom|Max")
 	float ZoomMax = 4000.0f;
-	
+
 	UPROPERTY(BlueprintReadOnly)
 	ATower *Tower;
-public:
 
+public:
 	UFUNCTION(BlueprintCallable, Category = "Coins|")
 	float GetCoins();
 
@@ -209,17 +212,16 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category = "Coins|SPEND")
 	bool SpendCoins(float coins);
-	
-
 
 	UFUNCTION(BlueprintCallable, Category = "Castle|Damage")
 	void ApplyDamageOnCastle(float damageAmount);
 
 	UPROPERTY(BlueprintReadWrite)
 	AMyMap *Map;
-	
+
 	const std::string PLACED = "PLACED";
 	const std::string DESTROYED = "DESTROYED";
+
 private:
 	void CheckJump();
 

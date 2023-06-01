@@ -25,7 +25,7 @@ void AEnemiesSpawner::BeginPlay()
 }
 void AEnemiesSpawner::StartWave()
 {
-	GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Red,FString::Printf(TEXT("Started Wave")));
+	//GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Red,FString::Printf(TEXT("Started Wave")));
 	WaveIndex *= 5;
 	SpawnDelay = 1.f;
 	EnemyPerWaveCounter = 0;

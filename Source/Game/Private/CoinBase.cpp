@@ -2,6 +2,7 @@
 
 #include "CoinBase.h"
 #include "MyCharacter.h"
+#include "PaperFlipbook.h"
 // Sets default values
 ACoinBase::ACoinBase()
 {
@@ -13,7 +14,7 @@ ACoinBase::ACoinBase()
 	Speed = 500.f;
 	LifeSpan = 100.f;
 	LifeTime = 0.f;
-	MinHeight = 100.f;
+	MinHeight = 50.f;
 	BounceCoefficient = -0.5f;
 
 	if (!RootComponent)
@@ -48,14 +49,15 @@ ACoinBase::ACoinBase()
 
 	if (!Bullet)
 	{
-		Bullet = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("BulletMesh"));
-		FString AssetPathName = TEXT("/Script/Engine.StaticMesh'/Game/_Main/tiles/obstacle_block.obstacle_block'");
-		UStaticMesh *Asset = Cast<UStaticMesh>(StaticLoadObject(UStaticMesh::StaticClass(), this, *AssetPathName));
-		static ConstructorHelpers::FObjectFinder<UStaticMesh> Mesh(
-			TEXT("/Script/Engine.StaticMesh'/Engine/EditorMeshes/EditorSphere.EditorSphere'"));
-		Bullet->SetStaticMesh(Asset);
-		Bullet->SetRelativeScale3D(FVector(0.4f, 0.4f, 0.4f));
+		Bullet = CreateDefaultSubobject<UPaperFlipbookComponent>(TEXT("SpriteComponent"));
+		FString AssetPathName = TEXT("/Script/Paper2D.PaperFlipbook'/Game/_Main/Sprites/extra/coin_/CoinRotation.CoinRotation'");
+		
+		UPaperFlipbook *Asset = LoadObject<UPaperFlipbook>(nullptr, TEXT("/Script/Paper2D.PaperFlipbook'/Game/_Main/Sprites/extra/coin_/CoinRotation.CoinRotation'"));
+		Bullet->SetFlipbook(Asset);
+		Bullet->SetRelativeScale3D(FVector(0.5f, 0.5f, 0.5f));
+		Bullet->SetRelativeRotation(FRotator(0.f,90.f,0.f));
 		Bullet->SetupAttachment(RootComponent);
+		Bullet->SetCastShadow(true);
 		Bullet->SetCollisionProfileName(TEXT("NoCollision"));
 	}
 }
@@ -73,7 +75,7 @@ void ACoinBase::BeginPlay()
 void ACoinBase::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-	
+
 	FVector CurrentLocation = GetActorLocation();
 	ProjectileMovementComponent->Velocity.X *= negAccel;
 	ProjectileMovementComponent->Velocity.Y *= negAccel;
@@ -95,17 +97,19 @@ void ACoinBase::Tick(float DeltaTime)
 	}
 	else
 	{
-		
+
 		ProjectileMovementComponent->Velocity.Z = 0;
 		ProjectileMovementComponent->ProjectileGravityScale = 0.0f;
 		// SetVelocity(FVector(ProjectileMovementComponent->Velocity.X, ProjectileMovementComponent->Velocity.Y, 0));
 		// Move(LifeTime);
 	}
-	if(ProjectileMovementComponent->Velocity.X < 20 ){
+	if (ProjectileMovementComponent->Velocity.X < 20)
+	{
 		ProjectileMovementComponent->Velocity.X = 0;
 	}
-	
-	if(ProjectileMovementComponent->Velocity.Y < 20 ){
+
+	if (ProjectileMovementComponent->Velocity.Y < 20)
+	{
 		ProjectileMovementComponent->Velocity.Y = 0;
 	}
 	// Move(LifeTime);
@@ -131,7 +135,6 @@ void ACoinBase::SetVelocity(const FVector &Velocity)
 {
 	ProjectileMovementComponent->Velocity = (Velocity * Speed);
 }
-
 
 float ACoinBase::GetCost()
 {

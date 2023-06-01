@@ -62,7 +62,7 @@ AProjectileBase::AProjectileBase()
 			TEXT("/Script/Engine.StaticMesh'/Engine/EditorMeshes/EditorSphere.EditorSphere'"));
 
 		Bullet->SetStaticMesh(Asset);
-		Bullet->SetRelativeScale3D(FVector(1.f, 1.f, 1.f));
+		Bullet->SetRelativeScale3D(FVector(0.5f, 0.5f, 0.5f));
 		Bullet->SetupAttachment(RootComponent);
 	}
 
@@ -83,8 +83,9 @@ void AProjectileBase::BeginPlay()
 void AProjectileBase::OnHit(AActor *TargetActor)
 {
 	TSubclassOf<UDamageType> DamageType;
+	if(IsValid(TargetActor))
 	UGameplayStatics::ApplyDamage(TargetActor, Damage, GetOwner()->GetInstigatorController(), this, DamageType);
-	GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Red, FString::Printf(TEXT("HitDetected: %s"), *TargetActor->GetName()));
+	//GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Red, FString::Printf(TEXT("HitDetected: %s"), *TargetActor->GetName()));
 	Destroy();
 }
 

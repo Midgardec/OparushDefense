@@ -404,7 +404,7 @@ void AMyMap::ConvertMapFromImage()
 	bitmap_image Map(MAP_FILE_NAME);
 	if (!Map)
 	{
-		GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Blue, FString::Printf(TEXT("FILE DID NOT LOAD((")));
+		//GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Blue, FString::Printf(TEXT("FILE DID NOT LOAD((")));
 
 		return;
 	}

@@ -11,7 +11,7 @@
 #include "Components/CapsuleComponent.h"
 #include "Components/PostProcessComponent.h"
 #include "Kismet/GameplayStatics.h"
-
+#include "PaperFlipbook.h"
 #include "Engine/Engine.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #define DefaultRotationPitch -30
@@ -65,21 +65,12 @@ AMyCharacter::AMyCharacter()
 	/// Sprite setup
 	///
 
-	UPaperSprite *UpSprite = LoadObject<UPaperSprite>(nullptr, TEXT("/Script/Paper2D.PaperSprite'/Game/_Main/Sprites/Enemies/sprite_sheet_Sprite_77.sprite_sheet_Sprite_77'"));
-	UPaperSprite *DownSprite = LoadObject<UPaperSprite>(nullptr, TEXT("/Script/Paper2D.PaperSprite'/Game/_Main/Sprites/Enemies/sprite_sheet_Sprite_78.sprite_sheet_Sprite_78'"));
-	UPaperSprite *LeftSprite = LoadObject<UPaperSprite>(nullptr, TEXT("/Script/Paper2D.PaperSprite'/Game/_Main/Sprites/Enemies/sprite_sheet_Sprite_76.sprite_sheet_Sprite_76'"));
-	UPaperSprite *RightSprite = LoadObject<UPaperSprite>(nullptr, TEXT("/Script/Paper2D.PaperSprite'/Game/_Main/Sprites/Enemies/sprite_sheet_Sprite_75.sprite_sheet_Sprite_75'"));
-
-	Sprites.Add(EDirection::Up, UpSprite);
-	Sprites.Add(EDirection::Down, DownSprite);
-	Sprites.Add(EDirection::Left, LeftSprite);
-	Sprites.Add(EDirection::Right, RightSprite);
-
-	SpriteComponent = CreateDefaultSubobject<UPaperSpriteComponent>(TEXT("SpriteComponent"));
-	SpriteComponent->SetCollisionEnabled(ECollisionEnabled::NoCollision);
-	SpriteComponent->SetupAttachment(RootComponent);
-	SpriteComponent->SetGenerateOverlapEvents(false);
-
+	FlipbookComponent = CreateDefaultSubobject<UPaperFlipbookComponent>(TEXT("SpriteComponent"));
+	FlipbookComponent->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+	FlipbookComponent->SetupAttachment(RootComponent);
+	FlipbookComponent->SetGenerateOverlapEvents(false);
+	FlipbookComponent->SetRelativeLocation(FVector(0, 0, -80.f));
+	FlipbookComponent->SetCastShadow(true);
 	///
 	/// Post Process Component
 	///
@@ -91,7 +82,23 @@ AMyCharacter::AMyCharacter()
 	PostProcessComponent->Settings.DepthOfFieldFstop = 0.8f;
 	*/
 
-	
+	UPaperFlipbook *UpRun = LoadObject<UPaperFlipbook>(nullptr, TEXT("/Script/Paper2D.PaperFlipbook'/Game/_Main/Sprites/player/flipbooks/RunBack.RunBack'"));
+	UPaperFlipbook *DownRun = LoadObject<UPaperFlipbook>(nullptr, TEXT("/Script/Paper2D.PaperFlipbook'/Game/_Main/Sprites/player/flipbooks/RunFront.RunFront'"));
+	UPaperFlipbook *RightRun = LoadObject<UPaperFlipbook>(nullptr, TEXT("/Script/Paper2D.PaperFlipbook'/Game/_Main/Sprites/player/flipbooks/RunRight.RunRight'"));
+
+	UPaperFlipbook *UpIdle = LoadObject<UPaperFlipbook>(nullptr, TEXT("/Script/Paper2D.PaperFlipbook'/Game/_Main/Sprites/player/flipbooks/IdleBack.IdleBack'"));
+	UPaperFlipbook *DownIdle = LoadObject<UPaperFlipbook>(nullptr, TEXT("/Script/Paper2D.PaperFlipbook'/Game/_Main/Sprites/player/flipbooks/IdleFront.IdleFront'"));
+	UPaperFlipbook *RightIdle = LoadObject<UPaperFlipbook>(nullptr, TEXT("/Script/Paper2D.PaperFlipbook'/Game/_Main/Sprites/player/flipbooks/Idle_right.Idle_right'"));
+
+	SpritesRun.Add(EDirection::Up, UpRun);
+	SpritesRun.Add(EDirection::Down, DownRun);
+	SpritesRun.Add(EDirection::Left, RightRun);
+	SpritesRun.Add(EDirection::Right, RightRun);
+
+	SpritesIdle.Add(EDirection::Up, UpIdle);
+	SpritesIdle.Add(EDirection::Down, DownIdle);
+	SpritesIdle.Add(EDirection::Left, RightIdle);
+	SpritesIdle.Add(EDirection::Right, RightIdle);
 }
 
 // Called when the game starts or when spawned
@@ -102,11 +109,8 @@ void AMyCharacter::BeginPlay()
 
 	TargetZoom = 2000.0f;
 
-
 	CurrentCastleHealth = MaxCastleHealth;
-	
-	
-	
+
 	/*const FRotator Rotation = SpringArmComponent->GetRelativeRotation();
 	 */
 
@@ -137,21 +141,24 @@ void AMyCharacter::BeginPlay()
 	const FRotator MapRotation(0.0f, 0.0f, 0.0f);
 	const FActorSpawnParameters SpawnInfo;
 	Map = GetWorld()->SpawnActor<AMyMap>(MapLocation, MapRotation, SpawnInfo);
-	if(Map){
+	if (Map)
+	{
 		Map->SetTileSize(TILE_SIDE_LEN);
 		Map->ConvertMapFromImage();
 		Map->SpawnMap();
 		Map->ProcessWaypoints();
+		this->SetActorLocation(FVector(Map->StartCell.Y_coord * TILE_SIDE_LEN, Map->StartCell.X_coord * TILE_SIDE_LEN, 0));
 	}
 	Jumping = false;
 
 	// Устанавливаем начальный спрайт
-	CurrentSprite = Sprites[EDirection::Right];
-	SpriteComponent->SetWorldRotation(FRotator(90.0f, 90.f, 0.0f));
-	SpriteComponent->SetSprite(CurrentSprite);
-	SpriteComponent->SetWorldScale3D(FVector(10.0f, 10.0f, 10.0f));
+	// CurrentSprite = ;
 
-	this->SetActorLocation(FVector(Map->StartCell.Y_coord * TILE_SIDE_LEN, Map->StartCell.X_coord * TILE_SIDE_LEN, 0));
+	CurrentSprite = SpritesIdle[EDirection::Up];
+	FlipbookComponent->SetRelativeRotation(FRotator(0.0f, 90.f, 0.0f));
+	FlipbookComponent->SetFlipbook(CurrentSprite);
+	FlipbookComponent->SetWorldScale3D(FVector(5.0f, 5.0f, 5.0f));
+	FlipbookComponent->SetCastShadow(true);
 }
 // Called to bind functionality to input
 void AMyCharacter::SetupPlayerInputComponent(UInputComponent *PlayerInputComponent)
@@ -187,25 +194,27 @@ void AMyCharacter::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
-	if(!bWaveStart){
+
+	if (!bWaveStart)
+	{
 		timer_ += DeltaTime;
-	}else{
+	}
+	else
+	{
 		timer_ = 0;
 	}
-	if(bCanChangeWave && !bWaveStart){
-		WaveIndex ++;
+	if (bCanChangeWave && !bWaveStart)
+	{
+		WaveIndex++;
 		bCanChangeWave = false;
 	}
 
-	if(timer_ >= time_between_waves && !bWaveStart){
+	if (timer_ >= time_between_waves && !bWaveStart)
+	{
 		timer_ = 0;
 		SetReady(true);
 		bWaveStart = true;
 	}
-	
-
-
-
 
 	// GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Red, FString::Printf(TEXT("%f"), GetCoins()));
 
@@ -220,21 +229,21 @@ void AMyCharacter::Tick(float DeltaTime)
 
 	// Определяем новое направление спрайта в зависимости от направления движения
 
-	EDirection NewDirection;
+	EDirection NewDirection = CurrentDirection;
 	if (FMath::Abs(Direction.X) > FMath::Abs(Direction.Y))
 	{
-		NewDirection = (Direction.X > 0.f) ? EDirection::Right : EDirection::Left;
+		NewDirection = (Direction.X > 0.f) ? EDirection::Down : EDirection::Up;
 	}
 	else
 	{
-		NewDirection = (Direction.Y > 0.f) ? EDirection::Down : EDirection::Up;
+		NewDirection = (Direction.Y > 0.f) ? EDirection::Right : EDirection::Left;
 	}
 
 	// Если направление изменилось, то меняем спрайт
-	if (NewDirection != CurrentDirection)
-	{
+	//if (NewDirection != CurrentDirection)
+	//{
 		ChangeSprite(NewDirection);
-	}
+	//}
 
 	if (Jumping)
 	{
@@ -284,8 +293,6 @@ void AMyCharacter::Tick(float DeltaTime)
 			coin->Destroy();
 		}
 	}
-
-	
 }
 float AMyCharacter::GetCoins()
 {
@@ -306,17 +313,34 @@ bool AMyCharacter::SpendCoins(float Coins)
 }
 void AMyCharacter::ChangeSprite(EDirection NewDirection)
 {
+	
 	// Задаем новое направление
 	CurrentDirection = NewDirection;
-
+	if (NewDirection == EDirection::Left)
+	{
+		FlipbookComponent->SetRelativeRotation(FRotator(0, -90, 0));
+	}
+	else
+	{
+		FlipbookComponent->SetRelativeRotation(FRotator(0, 90, 0));
+	}
+	UPaperFlipbook *NewSprite = nullptr;
 	// Получаем спрайт для нового направления из списка
-	UPaperSprite *NewSprite = Sprites.FindRef(NewDirection);
+	// GEngine->AddOnScreenDebugMessage(-1,1.f,FColor::White, FString::Printf());
+	if (!bIsMovingV && !bIsMovingH){
+
+		NewSprite = SpritesIdle.FindRef(NewDirection);
+	}
+	else
+	{
+		NewSprite = SpritesRun.FindRef(NewDirection);
+	}
 
 	// Если спрайт найден, то меняем его
 	if (NewSprite != nullptr)
 	{
 		// Заменяем текущий спрайт на новый
-		SpriteComponent->SetSprite(NewSprite);
+		FlipbookComponent->SetFlipbook(NewSprite);
 	}
 	// Иначе выводим ошибку в лог
 	else
@@ -332,8 +356,15 @@ void AMyCharacter::CanStartNextWave(bool bCond)
 
 void AMyCharacter::MoveVert(float AxisValue)
 {
+	if(AxisValue != 0){
+		bIsMovingV = true;
+	}else{
+		bIsMovingV = false;
+	}
 
-	if (AxisValue == 0.f)
+	//GEngine->AddOnScreenDebugMessage(-1,15.f, FColor::White, FString::Printf(TEXT("VertAxis %i"),bIsMovingV));
+	
+	if (FMath::Abs(AxisValue) <= 0.1f)
 	{
 		bMoveVert = false;
 		return;
@@ -367,8 +398,17 @@ void AMyCharacter::MoveVert(float AxisValue)
 
 void AMyCharacter::MoveHoriz(float AxisValue)
 {
+	if(AxisValue != 0){
+		bIsMovingH = true;
+	}else{
+		
+		bIsMovingH = false;
+	}
 
-	if (AxisValue == 0.f)
+	//GEngine->AddOnScreenDebugMessage(-1,15.f, FColor::White, FString::Printf(TEXT("HorizAxis %i"),bIsMovingH));
+	
+
+	if (FMath::Abs(AxisValue) <= 0.1f)
 	{
 		bMoveHoriz = false;
 		return;
@@ -434,7 +474,8 @@ void AMyCharacter::PlaceTower()
 				TowerMember->Placed = true;
 				TowerMember = nullptr;
 				Map->MapChange(map_x, map_y, this->PLACED);
-				GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Green, FString::Printf(TEXT("X = %i, Y = %i"), map_x, map_y));
+				
+				//GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Green, FString::Printf(TEXT("X = %i, Y = %i"), map_x, map_y));
 			}
 			// else
 			//  {
@@ -536,6 +577,6 @@ void AMyCharacter::CheckJump()
 
 void AMyCharacter::ApplyDamageOnCastle(float damageAmount)
 {
-	GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Red, FString::Printf(TEXT("%f"), CurrentCastleHealth));
+	//GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Red, FString::Printf(TEXT("%f"), CurrentCastleHealth));
 	CurrentCastleHealth -= damageAmount;
 }
